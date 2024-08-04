@@ -1,4 +1,3 @@
-// app/layout.js
 import "./globals.css";
 import Layout from "./components/Layout";
 import { GeistSans } from "geist/font/sans";
@@ -7,12 +6,10 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export const metadata = {
   charset: "UTF-8",
-  themeColor: "#FFFFFF",
   title: "lagden.dev",
   description: "A small development group passionate about open-source.",
   keywords: "lagden, development, open-source, dev",
   robots: "index, follow",
-  viewport: "width=device-width, initial-scale=1.0",
   httpEquiv: {
     "Content-Type": "text/html; charset=utf-8",
   },
@@ -34,6 +31,13 @@ export const metadata = {
     description: "A small development group passionate about open-source.",
     image: "https://i.lagden.dev/logo.png",
   },
+};
+
+export const generateViewport = () => {
+  return {
+    themeColor: "#FFFFFF",
+    viewport: "width=device-width, initial-scale=1.0",
+  };
 };
 
 export default function RootLayout({ children }) {
