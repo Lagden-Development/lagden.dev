@@ -26,7 +26,7 @@ export default function ZachLagden() {
       "MongoDB",
     ],
     githubUrl: "https://github.com/zachlagden",
-    linkedinUrl: "https://www.linkedin.com/in/zach-lagden",
+    linkedinUrl: "https://www.linkedin.com/in/zachlagden/",
     webUrl: "https://zachlagden.uk",
     location: "Ascot, UK",
     pronouns: "he/him",
