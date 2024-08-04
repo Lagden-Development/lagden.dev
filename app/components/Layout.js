@@ -39,7 +39,7 @@ export default function Layout({ children }) {
       <footer className="p-4 text-center border-t border-gray-800">
         © 2024 Lagden Development.{" "}
         <a
-          href="https://github.com/Lagden-Development"
+          href="https://github.com/Lagden-Development/lagden.dev"
           className="underline text-white"
         >
           GitHub
