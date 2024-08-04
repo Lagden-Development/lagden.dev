@@ -41,6 +41,7 @@ export default function Layout({ children }) {
         <a
           href="https://github.com/Lagden-Development/lagden.dev"
           className="underline text-white"
+          target="_blank"
         >
           GitHub
         </a>
