@@ -11,25 +11,33 @@ export const metadata = {
   keywords: "lagden, development, open-source, dev",
   robots: "index, follow",
   httpEquiv: {
-    "Content-Type": "text/html; charset=utf-8",
+    "content-type": "text/html; charset=utf-8",
   },
   language: "English",
   revisitAfter: "7 days",
   author: "Lagden Development",
-  og: {
+  openGraph: {
     type: "website",
     locale: "en_GB",
     url: "https://lagden.dev/",
     title: "lagden.dev",
     description: "A small development group passionate about open-source.",
-    image: "https://i.lagden.dev/logo.png",
+    images: [
+      {
+        url: "https://i.lagden.dev/logo.png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     url: "https://lagden.dev/",
     title: "lagden.dev",
     description: "A small development group passionate about open-source.",
-    image: "https://i.lagden.dev/logo.png",
+    images: [
+      {
+        url: "https://i.lagden.dev/logo.png",
+      },
+    ],
   },
 };
 
