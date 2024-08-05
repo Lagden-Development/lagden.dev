@@ -21,7 +21,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="flex flex-col min-h-screen text-white bg-black">
-      <nav className="p-4 flex items-center border-b border-gray-800">
+      <nav className="fixed top-0 left-0 right-0 p-4 flex items-center border-b border-gray-800 bg-black z-10">
         <div className="flex items-center">
           <span className="font-bold text-white text-xl">lagden.dev</span>
           <Link href="/" className={getLinkClass("/")}>
@@ -35,7 +35,7 @@ export default function Layout({ children }) {
           </Link>
         </div>
       </nav>
-      <main className="flex-grow p-4">{children}</main>
+      <main className="flex-grow p-4 mt-16">{children}</main>
       <footer className="p-4 text-center border-t border-gray-800">
         © 2024 Lagden Development.{" "}
         <a
