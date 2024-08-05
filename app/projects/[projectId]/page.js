@@ -8,6 +8,7 @@ import Link from "next/link";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import ProjectNotFound from "../../components/ProjectNotFound";
 
 export default function Project() {
   const pathname = usePathname();
@@ -18,6 +19,7 @@ export default function Project() {
   const [project, setProject] = useState(null);
   const [readme, setReadme] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isNotFound, setIsNotFound] = useState(false);
 
   useEffect(() => {
     if (projectId) {
@@ -41,14 +43,25 @@ export default function Project() {
                     setIsLoading(false);
                   });
               });
+          } else {
+            setIsNotFound(true);
+            setIsLoading(false);
           }
         })
-        .catch((err) => console.error("Error loading project: ", err));
+        .catch((err) => {
+          console.error("Error loading project: ", err);
+          setIsNotFound(true);
+          setIsLoading(false);
+        });
     }
   }, [projectId]);
 
-  if (!project) {
+  if (isLoading) {
     return <LoadingSpinner />;
+  }
+
+  if (isNotFound) {
+    return <ProjectNotFound />;
   }
 
   return (
@@ -66,12 +79,15 @@ export default function Project() {
           <p className="text-lg mb-4">{project.description}</p>
           <div className="mb-4">
             {project.tags.map((tag, index) => (
-              <span
+              <Link
                 key={index}
-                className="inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded mr-2 mb-2"
+                href={`/search/tag/${tag}?fromProject=${project.id}`}
+                passHref
               >
-                {tag}
-              </span>
+                <span className="inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded mr-2 mb-2 cursor-pointer hover:bg-gray-300">
+                  {tag}
+                </span>
+              </Link>
             ))}
           </div>
           <div className="flex space-x-4">

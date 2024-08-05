@@ -1,4 +1,4 @@
-// app/people/[personId]/page.js
+// app/projects/[personId]/page.js
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import PersonNotFound from "../../components/PersonNotFound";
 
 export default function Person() {
   const pathname = usePathname();
@@ -16,6 +17,7 @@ export default function Person() {
   const [person, setPerson] = useState(null);
   const [bio, setBio] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isNotFound, setIsNotFound] = useState(false);
 
   useEffect(() => {
     if (personId) {
@@ -39,14 +41,25 @@ export default function Person() {
                     setIsLoading(false);
                   });
               });
+          } else {
+            setIsNotFound(true);
+            setIsLoading(false);
           }
         })
-        .catch((err) => console.error("Error loading person: ", err));
+        .catch((err) => {
+          console.error("Error loading person: ", err);
+          setIsNotFound(true);
+          setIsLoading(false);
+        });
     }
   }, [personId]);
 
-  if (!person) {
+  if (isLoading) {
     return <LoadingSpinner />;
+  }
+
+  if (isNotFound) {
+    return <PersonNotFound />;
   }
 
   return (
