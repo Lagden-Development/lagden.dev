@@ -39,13 +39,12 @@ export default function Home() {
         <section className="mb-8">
           <h2 className="text-3xl font-bold mb-4">About Us</h2>
           <p className="text-lg">
-            We specialize in multiple kinds of web development, including
-            front-end technologies like React, NextJS, and Tailwind; back-end
-            technologies like Node.js, Flask, and PHP; and databases like SQL
-            and MongoDB. Our team has expertise in Python, Discord.py, Flask,
-            Tailwind, NextJS, React, PHP, Java (including Minecraft plugins),
-            SQL, and MongoDB, allowing us to deliver comprehensive and robust
-            web solutions.
+            We specialize in web development, covering front-end technologies
+            like React, NextJS, and Tailwind; back-end technologies like
+            Node.js, Flask, and PHP; and databases like SQL and MongoDB. Our
+            expertise includes Python, Discord.py, Flask, Tailwind, NextJS,
+            React, PHP, Java (including Minecraft plugins), SQL, and MongoDB,
+            enabling us to provide comprehensive web solutions.
           </p>
         </section>
 
