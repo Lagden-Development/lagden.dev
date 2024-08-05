@@ -1,19 +1,26 @@
 // app/projects/page.js
-
 "use client";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("/projects.json")
       .then((res) => res.json())
-      .then((data) => setProjects(data))
-      .catch((err) => console.error("Error loading projects: ", err));
+      .then((data) => {
+        setProjects(data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading projects: ", err);
+        setIsLoading(false);
+      });
   }, []);
 
   const ProjectCard = ({ project }) => (
@@ -46,11 +53,15 @@ export default function Projects() {
           </p>
         </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

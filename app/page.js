@@ -4,9 +4,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 export default function Home() {
   const [featuredProjects, setFeaturedProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("/projects.json")
@@ -14,8 +16,12 @@ export default function Home() {
       .then((projects) => {
         const featured = projects.filter((project) => project.featured);
         setFeaturedProjects(featured);
+        setIsLoading(false);
       })
-      .catch((err) => console.error("Error loading projects: ", err));
+      .catch((err) => {
+        console.error("Error loading projects: ", err);
+        setIsLoading(false);
+      });
   }, []);
 
   return (
@@ -45,27 +51,37 @@ export default function Home() {
 
         <section className="mb-8">
           <h2 className="text-3xl font-bold mb-4">Featured Projects</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredProjects.map((project) => (
-              <Link key={project.id} href={`/projects/${project.id}`} passHref>
-                <div className="border border-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-800 flex flex-col justify-between h-full">
-                  <div>
-                    <div className="w-full h-40 mb-4 flex items-center justify-center">
-                      <Image
-                        src={project.imgSrc}
-                        alt={project.title}
-                        width={160}
-                        height={160}
-                        className="object-contain rounded"
-                      />
+          {isLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredProjects.map((project) => (
+                <Link
+                  key={project.id}
+                  href={`/projects/${project.id}?from=home`}
+                  passHref
+                >
+                  <div className="border border-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-800 flex flex-col justify-between h-full">
+                    <div>
+                      <div className="w-full h-40 mb-4 flex items-center justify-center">
+                        <Image
+                          src={project.imgSrc}
+                          alt={project.title}
+                          width={160}
+                          height={160}
+                          className="object-contain rounded"
+                        />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-2">
+                        {project.title}
+                      </h3>
+                      <p className="text-gray-400">{project.description}</p>
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-                    <p className="text-gray-400">{project.description}</p>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+          )}
           <Link href="/projects" passHref>
             <p className="text-gray-400 mt-4 cursor-pointer hover:underline">
               View all projects

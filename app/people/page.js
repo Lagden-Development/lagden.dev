@@ -1,19 +1,26 @@
 // app/people/page.js
-
 "use client";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function People() {
   const [people, setPeople] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("/people.json")
       .then((res) => res.json())
-      .then((data) => setPeople(data))
-      .catch((err) => console.error("Error loading people: ", err));
+      .then((data) => {
+        setPeople(data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading people: ", err);
+        setIsLoading(false);
+      });
   }, []);
 
   const PersonCard = ({ person }) => (
@@ -51,11 +58,15 @@ export default function People() {
           </p>
         </section>
 
-        <div className={`grid grid-cols-1 ${gridColsClass} gap-6`}>
-          {people.map((person) => (
-            <PersonCard key={person.id} person={person} />
-          ))}
-        </div>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div className={`grid grid-cols-1 ${gridColsClass} gap-6`}>
+            {people.map((person) => (
+              <PersonCard key={person.id} person={person} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

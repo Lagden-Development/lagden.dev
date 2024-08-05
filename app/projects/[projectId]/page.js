@@ -1,16 +1,19 @@
 // app/projects/[projectId]/page.js
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Project() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const projectId = pathname.split("/").pop();
+  const fromHome = searchParams.get("from") === "home";
 
   const [project, setProject] = useState(null);
   const [readme, setReadme] = useState("");
@@ -43,7 +46,7 @@ export default function Project() {
   }, [projectId]);
 
   if (!project) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
@@ -93,35 +96,23 @@ export default function Project() {
           </div>
         </div>
         <div className="md:w-2/3 md:pl-8">
-          <Link href="/projects">
-            <p className="text-blue-500 hover:underline mb-4 inline-block">
-              &larr; Back to All Projects
-            </p>
-          </Link>
+          <div className="flex justify-between items-center mb-4">
+            <Link href={fromHome ? "/" : "/projects"}>
+              <p className="text-blue-500 hover:underline">
+                &larr; {fromHome ? "Return to Home" : "Return to All Projects"}
+              </p>
+            </Link>
+            {fromHome && (
+              <Link href="/projects">
+                <p className="text-blue-500 hover:underline">
+                  View All Projects
+                </p>
+              </Link>
+            )}
+          </div>
           <hr className="border-gray-800 border-t-2 mb-4" />
           {isLoading ? (
-            <div className="flex justify-center items-center h-full">
-              <div
-                style={{
-                  border: "2px solid transparent",
-                  borderTop: "2px solid white",
-                  borderRadius: "50%",
-                  width: "30px",
-                  height: "30px",
-                  animation: "spin 0.5s linear infinite",
-                }}
-              ></div>
-              <style jsx>{`
-                @keyframes spin {
-                  0% {
-                    transform: rotate(0deg);
-                  }
-                  100% {
-                    transform: rotate(360deg);
-                  }
-                }
-              `}</style>
-            </div>
+            <LoadingSpinner />
           ) : (
             <div
               dangerouslySetInnerHTML={{ __html: readme }}

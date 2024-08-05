@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Person() {
   const pathname = usePathname();
@@ -43,7 +44,7 @@ export default function Person() {
   }, [personId]);
 
   if (!person) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
@@ -113,28 +114,7 @@ export default function Person() {
           </Link>
           <hr className="border-gray-800 border-t-2 mb-4" />
           {isLoading ? (
-            <div className="flex justify-center items-center h-full">
-              <div
-                style={{
-                  border: "2px solid transparent",
-                  borderTop: "2px solid white",
-                  borderRadius: "50%",
-                  width: "30px",
-                  height: "30px",
-                  animation: "spin 0.5s linear infinite",
-                }}
-              ></div>
-              <style jsx>{`
-                @keyframes spin {
-                  0% {
-                    transform: rotate(0deg);
-                  }
-                  100% {
-                    transform: rotate(360deg);
-                  }
-                }
-              `}</style>
-            </div>
+            <LoadingSpinner />
           ) : (
             <div
               dangerouslySetInnerHTML={{ __html: bio }}
