@@ -82,10 +82,13 @@ export default function Project() {
             responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length
           ).toFixed(2);
           setAverageResponseTime(avgResponseTime);
+        } else {
+          setStatus("unknown");
         }
       })
       .catch((err) => {
         console.error("Error fetching project status: ", err);
+        setStatus("unknown");
       });
   };
 
@@ -108,7 +111,7 @@ export default function Project() {
               ? "bg-red-500"
               : status === "validating"
               ? "bg-yellow-500"
-              : ""
+              : "bg-gray-500"
           }`}
           style={{
             animation: "waves 1.5s ease-in-out infinite",
@@ -121,10 +124,7 @@ export default function Project() {
           {status === "up" ? (
             <>
               <div>
-                <strong>Status:</strong>{" "}
-                {statusDetails.status[0]
-                  .toUpperCase()
-                  .concat(statusDetails.status.slice(1))}
+                <strong>Status:</strong> Up
               </div>
               <div>
                 <strong>Last Checked:</strong>{" "}
@@ -141,25 +141,56 @@ export default function Project() {
                 More Info
               </Link>
             </>
-          ) : (
+          ) : status === "down" ? (
             <>
               <div>
-                <strong>Status:</strong>{" "}
-                {statusDetails.status[0]
-                  .toUpperCase()
-                  .concat(statusDetails.status.slice(1))}
+                <strong>Status:</strong> Down
               </div>
               <div>
                 <strong>Last Checked:</strong>{" "}
                 {new Date(statusDetails.last_checked_at).toLocaleString()}
               </div>
-              <a
+              <Link
                 href="https://status.lagden.dev"
                 className="mt-2 text-blue-500 hover:underline"
-                _target="blank"
               >
                 More Info
-              </a>
+              </Link>
+            </>
+          ) : status === "validating" ? (
+            <>
+              <div>
+                <strong>Status:</strong> Validating
+              </div>
+              <div>
+                <strong>Last Checked:</strong>{" "}
+                {new Date(statusDetails.last_checked_at).toLocaleString()}
+              </div>
+              <div>
+                <strong>Infomation:</strong> Validation occurs after a period of
+                downtime to ensure the service is back up and running.
+              </div>
+              <Link
+                href="https://status.lagden.dev"
+                className="mt-2 text-blue-500 hover:underline"
+              >
+                More Info
+              </Link>
+            </>
+          ) : (
+            <>
+              <div>
+                <strong>Status:</strong> Unknown
+              </div>
+              <div>
+                <strong>Last Checked:</strong> N/A
+              </div>
+              <Link
+                href="https://status.lagden.dev"
+                className="mt-2 text-blue-500 hover:underline"
+              >
+                More Info
+              </Link>
             </>
           )}
         </div>
