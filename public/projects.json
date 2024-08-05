@@ -9,7 +9,9 @@
     "webUrl": "https://betterqr.com",
     "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/betterqr/main/README.md",
 
-    "featured": true
+    "featured": true,
+
+    "statusId": 2493182
   },
   {
     "id": "rickbot",
