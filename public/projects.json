@@ -1,0 +1,48 @@
+[
+  {
+    "id": "betterqr",
+    "title": "BetterQR",
+    "description": "The best QR managing service with various features, all for free.",
+    "imgSrc": "/images/project-betterqr.svg",
+    "tags": ["Python", "Flask", "Tailwind CSS"],
+    "githubUrl": "https://github.com/Lagden-Development/betterqr",
+    "webUrl": "https://betterqr.com",
+    "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/betterqr/main/README.md",
+
+    "featured": true
+  },
+  {
+    "id": "rickbot",
+    "title": "RickBot",
+    "description": "An advanced framework for quickly creating Discord bots with discord.py.",
+    "imgSrc": "/images/project-rickbot.png",
+    "tags": ["Python", "discord.py", "MongoDB"],
+    "githubUrl": "https://github.com/Lagden-Development/rickbot",
+    "webUrl": null,
+    "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/rickbot/main/README.md",
+
+    "featured": true
+  },
+  {
+    "id": "flask-obfuscate",
+    "title": "Flask-Obfuscate",
+    "description": "A Flask extension to obfuscate HTML responses.",
+    "imgSrc": "/images/lagden_dev_logo.png",
+    "tags": ["Python", "Flask", "Obfuscation"],
+    "githubUrl": "https://github.com/Lagden-Development/flask-obfuscate",
+    "webUrl": "https://pypi.org/project/Flask-Obfuscate/",
+    "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/flask-obfuscate/main/README.md",
+
+    "featured": true
+  },
+  {
+    "id": "discord-timestamps",
+    "title": "Discord-Timestamps",
+    "description": "Properly-formatted dynamic timestamps for Discord messages.",
+    "imgSrc": "/images/lagden_dev_logo.png",
+    "tags": ["Python", "discord.py", "Discord"],
+    "githubUrl": "https://github.com/Lagden-Development/discord-timestamps",
+    "webUrl": null,
+    "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/discord-timestamps/main/README.md"
+  }
+]

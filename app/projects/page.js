@@ -1,37 +1,20 @@
 // app/projects/page.js
+
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Projects() {
-  const projects = [
-    {
-      id: "betterqr",
-      title: "BetterQR",
-      description:
-        "The best QR managing service with various features, all for free.",
-      imgSrc: "/images/project-betterqr.svg",
-    },
-    {
-      id: "rickbot",
-      title: "RickBot",
-      description:
-        "An advanced framework for quickly creating Discord bots with discord.py.",
-      imgSrc: "/images/project-rickbot.png",
-    },
-    {
-      id: "flask-obfuscate",
-      title: "Flask-Obfuscate",
-      description: "A Flask extension to obfuscate HTML responses.",
-      imgSrc: "/images/lagden_dev_logo.png",
-    },
-    {
-      id: "discord-timestamps",
-      title: "Discord-Timestamps",
-      description:
-        "Properly-formatted dynamic timestamps for Discord messages.",
-      imgSrc: "/images/lagden_dev_logo.png",
-    },
-  ];
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    fetch("/projects.json")
+      .then((res) => res.json())
+      .then((data) => setProjects(data))
+      .catch((err) => console.error("Error loading projects: ", err));
+  }, []);
 
   const ProjectCard = ({ project }) => (
     <Link href={`/projects/${project.id}`} passHref>

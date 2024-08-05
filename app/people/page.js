@@ -1,22 +1,20 @@
 // app/people/page.js
+
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function People() {
-  const people = [
-    {
-      id: "zach-lagden",
-      name: "Zach Lagden",
-      role: "Software Engineer & Founder",
-      imgSrc: "/images/person-zach-lagden.jpg",
-    },
-    {
-      id: "callum-telfer",
-      name: "Callum Telfer",
-      role: "Software Engineer",
-      imgSrc: "/images/person-callum-telfer.png",
-    },
-  ];
+  const [people, setPeople] = useState([]);
+
+  useEffect(() => {
+    fetch("/people.json")
+      .then((res) => res.json())
+      .then((data) => setPeople(data))
+      .catch((err) => console.error("Error loading people: ", err));
+  }, []);
 
   const PersonCard = ({ person }) => (
     <Link href={`/people/${person.id}`} passHref>
