@@ -11,7 +11,7 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Person() {
   const pathname = usePathname();
-  const personId = pathname.split("/").pop();
+  const personId = pathname.split("/").pop()?.toLowerCase();
 
   const [person, setPerson] = useState(null);
   const [bio, setBio] = useState("");
@@ -22,7 +22,9 @@ export default function Person() {
       fetch("/people.json")
         .then((res) => res.json())
         .then((people) => {
-          const foundPerson = people.find((p) => p.id === personId);
+          const foundPerson = people.find(
+            (p) => p.id.toLowerCase() === personId
+          );
           if (foundPerson) {
             setPerson(foundPerson);
 

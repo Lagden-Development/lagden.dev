@@ -12,7 +12,7 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 export default function Project() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const projectId = pathname.split("/").pop();
+  const projectId = pathname.split("/").pop()?.toLowerCase();
   const fromHome = searchParams.get("from") === "home";
 
   const [project, setProject] = useState(null);
@@ -24,7 +24,9 @@ export default function Project() {
       fetch("/projects.json")
         .then((res) => res.json())
         .then((projects) => {
-          const foundProject = projects.find((p) => p.id === projectId);
+          const foundProject = projects.find(
+            (p) => p.id.toLowerCase() === projectId
+          );
           if (foundProject) {
             setProject(foundProject);
 
