@@ -3,6 +3,7 @@ import Layout from "./components/Layout";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 
 export const metadata = {
   charset: "UTF-8",
@@ -52,6 +53,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="text-white bg-black">
+        <GoogleAnalytics />
         <Layout>{children}</Layout>
       </body>
     </html>
