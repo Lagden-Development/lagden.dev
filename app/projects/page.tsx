@@ -1,38 +1,36 @@
-// app/search/tag/[tagName]/page.js
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import React from "react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import LoadingSpinner from "../../../components/LoadingSpinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 
-export default function TagSearch() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const tagName = decodeURIComponent(pathname.split("/").pop().toLowerCase());
-  const fromProject = searchParams.get("fromProject");
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  imgSrc: string;
+}
 
-  const [projects, setProjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function Projects() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetch("/projects.json")
       .then((res) => res.json())
-      .then((data) => {
-        const filteredProjects = data.filter((project) =>
-          project.tags.map((tag) => tag.toLowerCase()).includes(tagName)
-        );
-        setProjects(filteredProjects);
+      .then((data: Project[]) => {
+        setProjects(data);
         setIsLoading(false);
       })
       .catch((err) => {
         console.error("Error loading projects: ", err);
         setIsLoading(false);
       });
-  }, [tagName]);
+  }, []);
 
-  const ProjectCard = ({ project }) => (
+  const ProjectCard = ({ project }: { project: Project }) => (
     <Link href={`/projects/${project.id}`} passHref>
       <div className="border border-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-800 flex flex-col justify-between h-full">
         <div>
@@ -56,17 +54,12 @@ export default function TagSearch() {
     <div className="flex justify-center">
       <div className="max-w-4xl w-full text-center px-4">
         <section className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">
-            Projects with Tag: {tagName}
-          </h1>
-          {fromProject && (
-            <Link href={`/projects/${fromProject}`}>
-              <p className="text-blue-500 hover:underline mb-4 inline-block">
-                &larr; Back to {fromProject}
-              </p>
-            </Link>
-          )}
+          <h1 className="text-4xl font-bold mb-4">Our Projects</h1>
+          <p className="text-lg">
+            Here you can find a list of our current and past projects.
+          </p>
         </section>
+
         {isLoading ? (
           <LoadingSpinner />
         ) : (

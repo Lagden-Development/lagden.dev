@@ -1,13 +1,53 @@
+// app/projects/[projectId]/page.tsx
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import React from "react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
+import { usePathname, useSearchParams } from "next/navigation";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import ProjectNotFound from "../../components/ProjectNotFound";
+
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  imgSrc: string;
+  readmeUrl: string;
+  statusId?: string;
+  tags: string[];
+  githubUrl?: string;
+  webUrl?: string;
+}
+
+interface StatusDetails {
+  status?: string;
+  last_checked_at?: string;
+  response_times: {
+    data: {
+      attributes: {
+        regions: {
+          response_times: {
+            response_time: number;
+          }[];
+        }[];
+      };
+    };
+  };
+}
+
+const initialStatusDetails: StatusDetails = {
+  response_times: {
+    data: {
+      attributes: {
+        regions: [],
+      },
+    },
+  },
+};
 
 export default function Project() {
   const pathname = usePathname();
@@ -15,19 +55,22 @@ export default function Project() {
   const projectId = pathname.split("/").pop()?.toLowerCase();
   const fromHome = searchParams.get("from") === "home";
 
-  const [project, setProject] = useState(null);
-  const [readme, setReadme] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [isNotFound, setIsNotFound] = useState(false);
-  const [status, setStatus] = useState(null);
-  const [statusDetails, setStatusDetails] = useState({});
-  const [averageResponseTime, setAverageResponseTime] = useState(null);
+  const [project, setProject] = useState<Project | null>(null);
+  const [readme, setReadme] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isNotFound, setIsNotFound] = useState<boolean>(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const [statusDetails, setStatusDetails] =
+    useState<StatusDetails>(initialStatusDetails);
+  const [averageResponseTime, setAverageResponseTime] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (projectId) {
       fetch("/projects.json")
         .then((res) => res.json())
-        .then((projects) => {
+        .then((projects: Project[]) => {
           const foundProject = projects.find(
             (p) => p.id.toLowerCase() === projectId
           );
@@ -67,10 +110,10 @@ export default function Project() {
     }
   }, [projectId]);
 
-  const fetchProjectStatus = (statusId) => {
+  const fetchProjectStatus = (statusId: string) => {
     fetch(`/api/project-status?statusId=${statusId}`)
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: StatusDetails) => {
         if (data.status) {
           setStatus(data.status);
           setStatusDetails(data);
@@ -128,7 +171,7 @@ export default function Project() {
               </div>
               <div>
                 <strong>Last Checked:</strong>{" "}
-                {new Date(statusDetails.last_checked_at).toLocaleString()}
+                {new Date(statusDetails.last_checked_at!).toLocaleString()}
               </div>
               <div>
                 <strong>Average Response Time:</strong> {averageResponseTime}{" "}
@@ -148,7 +191,7 @@ export default function Project() {
               </div>
               <div>
                 <strong>Last Checked:</strong>{" "}
-                {new Date(statusDetails.last_checked_at).toLocaleString()}
+                {new Date(statusDetails.last_checked_at!).toLocaleString()}
               </div>
               <Link
                 href="https://status.lagden.dev"
@@ -164,11 +207,11 @@ export default function Project() {
               </div>
               <div>
                 <strong>Last Checked:</strong>{" "}
-                {new Date(statusDetails.last_checked_at).toLocaleString()}
+                {new Date(statusDetails.last_checked_at!).toLocaleString()}
               </div>
               <div>
-                <strong>Infomation:</strong> Validation occurs after a period of
-                downtime to ensure the service is back up and running.
+                <strong>Information:</strong> Validation occurs after a period
+                of downtime to ensure the service is back up and running.
               </div>
               <Link
                 href="https://status.lagden.dev"
@@ -214,22 +257,22 @@ export default function Project() {
       <div className="max-w-6xl w-full flex flex-col md:flex-row px-4">
         <div className="md:w-1/3 md:pr-8">
           <Image
-            src={project.imgSrc}
-            alt={project.title}
+            src={project!.imgSrc}
+            alt={project!.title}
             width={400}
             height={400}
             className="object-cover rounded mb-4"
           />
           <div className="flex items-center">
-            <h1 className="text-4xl font-bold mb-2">{project.title}</h1>
+            <h1 className="text-4xl font-bold mb-2">{project!.title}</h1>
             {statusIndicator}
           </div>
-          <p className="text-lg mb-4">{project.description}</p>
+          <p className="text-lg mb-4">{project!.description}</p>
           <div className="mb-4">
-            {project.tags.map((tag, index) => (
+            {project!.tags.map((tag, index) => (
               <Link
                 key={index}
-                href={`/search/tag/${tag}?fromProject=${project.id}`}
+                href={`/search/tag/${tag}?fromProject=${project!.id}`}
                 passHref
               >
                 <span className="inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded mr-2 mb-2 cursor-pointer hover:bg-gray-300">
@@ -239,9 +282,9 @@ export default function Project() {
             ))}
           </div>
           <div className="flex space-x-4">
-            {project.githubUrl && (
+            {project!.githubUrl && (
               <a
-                href={project.githubUrl}
+                href={project!.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-nobel hover:text-white"
@@ -249,9 +292,9 @@ export default function Project() {
                 <i className="fab fa-github fa-2x"></i>
               </a>
             )}
-            {project.webUrl && (
+            {project!.webUrl && (
               <a
-                href={project.webUrl}
+                href={project!.webUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-nobel hover:text-white"

@@ -1,19 +1,27 @@
-// app/people/page.js
+// app/people/page.tsx
 "use client";
 
+import React from "react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LoadingSpinner from "../components/LoadingSpinner";
 
+interface Person {
+  id: string;
+  name: string;
+  role: string;
+  imgSrc: string;
+}
+
 export default function People() {
-  const [people, setPeople] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetch("/people.json")
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: Person[]) => {
         setPeople(data);
         setIsLoading(false);
       })
@@ -23,7 +31,7 @@ export default function People() {
       });
   }, []);
 
-  const PersonCard = ({ person }) => (
+  const PersonCard = ({ person }: { person: Person }) => (
     <Link href={`/people/${person.id}`} passHref>
       <div className="border border-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-800 flex flex-col justify-between h-full">
         <div>

@@ -1,6 +1,7 @@
+// app/api/project-status/route.ts
 import axios from "axios";
 
-export async function GET(request) {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const statusId = searchParams.get("statusId");
 
@@ -22,7 +23,7 @@ export async function GET(request) {
     );
 
     const monitor = response.data.data.find(
-      (monitor) => monitor.id === statusId
+      (monitor: { id: string }) => monitor.id === statusId
     );
 
     if (!monitor) {

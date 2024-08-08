@@ -1,4 +1,4 @@
-// components/GoogleAnalytics.js
+// components/GoogleAnalytics.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -9,11 +9,11 @@ const GA_TRACKING_ID = "G-JHDS9FXCK2";
 
 ReactGA.initialize(GA_TRACKING_ID);
 
-const GoogleAnalytics = () => {
+const GoogleAnalytics: React.FC = () => {
   const pathname = usePathname();
 
   useEffect(() => {
-    const handleRouteChange = (url) => {
+    const handleRouteChange = (url: string) => {
       ReactGA.pageview(url);
     };
 

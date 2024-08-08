@@ -1,19 +1,27 @@
-// app/page.js
+// app/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LoadingSpinner from "./components/LoadingSpinner";
 
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  imgSrc: string;
+  featured: boolean;
+}
+
 export default function Home() {
-  const [featuredProjects, setFeaturedProjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetch("/projects.json")
       .then((res) => res.json())
-      .then((projects) => {
+      .then((projects: Project[]) => {
         const featured = projects.filter((project) => project.featured);
         setFeaturedProjects(featured);
         setIsLoading(false);

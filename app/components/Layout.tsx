@@ -1,13 +1,15 @@
-"use client"; // Add this line to mark the component as a client component
+// app/components/Layout.tsx
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React from "react";
 
-export default function Layout({ children }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   // Utility function to determine active link
-  const getLinkClass = (path) => {
+  const getLinkClass = (path: string) => {
     const baseClasses =
       "mx-2 rounded-lg transition duration-200 ease-in px-3 py-1";
     const activeClasses = "bg-gray-500 bg-opacity-50 text-white";

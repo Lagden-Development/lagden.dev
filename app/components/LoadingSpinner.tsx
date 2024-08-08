@@ -1,4 +1,6 @@
-// app/components/LoadingSpinner.js
+// app/components/LoadingSpinner.tsx
+import React from "react";
+
 export default function LoadingSpinner() {
   return (
     <div className="flex justify-center items-center h-full">

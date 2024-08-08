@@ -1,9 +1,12 @@
-import "./globals.css";
+// app/layout.tsx
+
+import React from "react";
 import Layout from "./components/Layout";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import GoogleAnalytics from "./components/GoogleAnalytics";
+import "./globals.css";
 
 export const metadata = {
   charset: "UTF-8",
@@ -49,7 +52,11 @@ export const generateViewport = () => {
   };
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="text-white bg-black">
