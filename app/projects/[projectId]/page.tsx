@@ -1,4 +1,3 @@
-// app/projects/[projectId]/page.tsx
 "use client";
 
 import React from "react";
@@ -302,6 +301,14 @@ export default function Project() {
                 <i className="fas fa-globe fa-2x"></i>
               </a>
             )}
+          </div>
+          <div className="mt-4">
+            <Link
+              href={`/projects/${projectId}/commits`}
+              className="text-blue-500 hover:underline"
+            >
+              View Commit History
+            </Link>
           </div>
         </div>
         <div className="md:w-2/3 md:pl-8">
