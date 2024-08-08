@@ -26,6 +26,18 @@
     "featured": true
   },
   {
+    "id": "lagden-dev",
+    "title": "lagden.dev",
+    "description": "The official website for Lagden Development; built with NextJS and TypeScript.",
+    "imgSrc": "/images/lagden_dev_logo.png",
+    "tags": ["nextjs", "typescript", "tailwind css"],
+    "githubUrl": "https://github.com/Lagden-Development/lagden.dev",
+    "webUrl": "https://lagden.dev",
+    "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/lagden.dev/main/README.md",
+
+    "statusId": 2493175
+  },
+  {
     "id": "flask-obfuscate",
     "title": "Flask-Obfuscate",
     "description": "A Flask extension to obfuscate HTML responses.",
