@@ -95,7 +95,7 @@ const CommitsPage = () => {
     };
 
     fetchCommits();
-  }, [projectId]);
+  }, [projectId, params]); // Added `params` to the dependency array
 
   const handleCommitClick = (commit: Commit) => {
     setSelectedCommit(commit);

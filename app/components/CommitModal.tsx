@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 
 type Commit = {
   sha: string;
@@ -28,19 +28,22 @@ const CommitModal: React.FC<CommitModalProps> = ({
   repo,
   onClose,
 }) => {
-  const handleClickOutside = (event: MouseEvent) => {
-    const modalContent = document.querySelector(".modal-content");
-    if (modalContent && !modalContent.contains(event.target as Node)) {
-      onClose();
-    }
-  };
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      const modalContent = document.querySelector(".modal-content");
+      if (modalContent && !modalContent.contains(event.target as Node)) {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
