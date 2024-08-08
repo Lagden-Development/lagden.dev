@@ -117,7 +117,12 @@ export default function Updates() {
         )}
 
         {selectedCommit && (
-          <CommitModal commit={selectedCommit} onClose={handleCloseModal} />
+          <CommitModal
+            commit={selectedCommit}
+            owner="Lagden-Development"
+            repo="lagden.dev"
+            onClose={handleCloseModal}
+          />
         )}
       </div>
     </div>
