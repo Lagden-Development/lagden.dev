@@ -302,7 +302,7 @@ export default function Project() {
               </a>
             )}
           </div>
-          <div className="mt-4">
+          <div className="mt-4 mb-4">
             <Link
               href={`/projects/${projectId}/commits`}
               className="text-blue-500 hover:underline"
