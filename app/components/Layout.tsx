@@ -63,7 +63,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="flex flex-col min-h-screen text-white bg-black">
       <nav className="fixed top-0 left-0 right-0 p-4 flex items-center justify-between border-b border-gray-800 bg-black z-10">
         <div className="flex items-center">
-          <span className="font-bold text-white text-xl">lagden.dev</span>
+          <Link href="/">
+            <span className="font-bold text-white text-xl">lagden.dev</span>
+          </Link>
           {/* Desktop Links */}
           <div className="hidden md:flex">
             <Link href="/" className={getDesktopLinkClass("/")}>
