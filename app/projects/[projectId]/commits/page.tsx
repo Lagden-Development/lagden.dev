@@ -149,13 +149,17 @@ const CommitsPage = () => {
                       {commit.sha.substring(0, 7)}
                     </Link>
                     {" - "}
-                    <a
-                      href={commit.author.html_url}
-                      target="_blank"
-                      className="underline"
-                    >
-                      {commit.commit.author.name}
-                    </a>
+                    {commit.author ? (
+                      <a
+                        href={commit.author.html_url}
+                        target="_blank"
+                        className="underline"
+                      >
+                        {commit.commit.author.name}
+                      </a>
+                    ) : (
+                      <span>{commit.commit.author.name}</span>
+                    )}
                     {" - "}
                     {new Date(commit.commit.author.date).toLocaleString()}
                   </p>
