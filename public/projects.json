@@ -6,7 +6,7 @@
     "imgSrc": "/images/project-betterqr.svg",
     "tags": ["python", "flask", "tailwind css"],
     "githubUrl": "https://github.com/Lagden-Development/betterqr",
-    "webUrl": "https://betterqr.com",
+    "webUrl": "https://betterqr.app",
     "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/betterqr/main/README.md",
 
     "featured": true,

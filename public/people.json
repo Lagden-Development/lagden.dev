@@ -6,12 +6,13 @@
     "imgSrc": "/images/person-zach-lagden.jpg",
     "skills": [
       "Python",
-      "Discord.py",
       "Flask",
-      "React",
       "NextJS",
       "Tailwind CSS",
-      "MongoDB"
+      "MongoDB",
+      "Ubuntu",
+      "Cloudflare",
+      "Server Management"
     ],
     "githubUrl": "https://github.com/zachlagden",
     "linkedinUrl": "https://www.linkedin.com/in/zachlagden/",
