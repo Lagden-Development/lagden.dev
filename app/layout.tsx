@@ -2,7 +2,7 @@
 
 import React from "react";
 import Layout from "./components/Layout";
-import GoogleAnalytics from "./components/GoogleAnalytics";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -60,7 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="text-white bg-black">
-        <GoogleAnalytics />
+        <GoogleAnalytics gaId="G-JHDS9FXCK2" />
         <Layout>{children}</Layout>
       </body>
     </html>
