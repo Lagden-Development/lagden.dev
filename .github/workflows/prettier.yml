@@ -1,4 +1,4 @@
-name: Lint
+name: Prettier Check
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  lint:
-    name: Run ESLint
+  prettier:
+    name: Run Prettier
     runs-on: ubuntu-latest
 
     steps:
@@ -22,12 +22,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # Use the Node.js version you are using for the Next.js project
+          node-version: '20' # Specify your Node.js version
 
       # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run ESLint
-      - name: Run ESLint
-        run: npm run lint
+      # Step 4: Run Prettier
+      - name: Run Prettier
+        run: npm run format:check
