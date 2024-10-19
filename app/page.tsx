@@ -1,10 +1,10 @@
 // app/page.tsx
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import LoadingSpinner from "./components/LoadingSpinner";
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import LoadingSpinner from './components/LoadingSpinner';
 
 interface Project {
   id: string;
@@ -19,7 +19,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch("/projects.json")
+    fetch('/projects.json')
       .then((res) => res.json())
       .then((projects: Project[]) => {
         const featured = projects.filter((project) => project.featured);
@@ -27,7 +27,7 @@ export default function Home() {
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading projects: ", err);
+        console.error('Error loading projects: ', err);
         setIsLoading(false);
       });
   }, []);

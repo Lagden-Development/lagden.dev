@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { remark } from "remark";
-import remarkHtml from "remark-html";
-import { usePathname, useSearchParams } from "next/navigation";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import ProjectNotFound from "../../components/ProjectNotFound";
+import React from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { remark } from 'remark';
+import remarkHtml from 'remark-html';
+import { usePathname, useSearchParams } from 'next/navigation';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import ProjectNotFound from '../../components/ProjectNotFound';
 
 interface Project {
   id: string;
@@ -51,11 +51,11 @@ const initialStatusDetails: StatusDetails = {
 export default function Project() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const projectId = pathname.split("/").pop()?.toLowerCase();
-  const fromHome = searchParams.get("from") === "home";
+  const projectId = pathname.split('/').pop()?.toLowerCase();
+  const fromHome = searchParams.get('from') === 'home';
 
   const [project, setProject] = useState<Project | null>(null);
-  const [readme, setReadme] = useState<string>("");
+  const [readme, setReadme] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
   const [status, setStatus] = useState<string | null>(null);
@@ -67,7 +67,7 @@ export default function Project() {
 
   useEffect(() => {
     if (projectId) {
-      fetch("/projects.json")
+      fetch('/projects.json')
         .then((res) => res.json())
         .then((projects: Project[]) => {
           const foundProject = projects.find(
@@ -102,7 +102,7 @@ export default function Project() {
           }
         })
         .catch((err) => {
-          console.error("Error loading project: ", err);
+          console.error('Error loading project: ', err);
           setIsNotFound(true);
           setIsLoading(false);
         });
@@ -125,12 +125,12 @@ export default function Project() {
           ).toFixed(2);
           setAverageResponseTime(avgResponseTime);
         } else {
-          setStatus("unknown");
+          setStatus('unknown');
         }
       })
       .catch((err) => {
-        console.error("Error fetching project status: ", err);
-        setStatus("unknown");
+        console.error('Error fetching project status: ', err);
+        setStatus('unknown');
       });
   };
 
@@ -147,33 +147,33 @@ export default function Project() {
       <div className="relative group">
         <span
           className={`inline-block w-6 h-6 mr-2 rounded-full ${
-            status === "up"
-              ? "bg-green-500"
-              : status === "down"
-              ? "bg-red-500"
-              : status === "validating"
-              ? "bg-yellow-500"
-              : "bg-gray-500"
+            status === 'up'
+              ? 'bg-green-500'
+              : status === 'down'
+                ? 'bg-red-500'
+                : status === 'validating'
+                  ? 'bg-yellow-500'
+                  : 'bg-gray-500'
           }`}
           style={{
-            animation: "waves 1.5s ease-in-out infinite",
+            animation: 'waves 1.5s ease-in-out infinite',
           }}
         ></span>
         <div
           className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 text-xs text-center text-white bg-black rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
           style={{ zIndex: 10 }}
         >
-          {status === "up" ? (
+          {status === 'up' ? (
             <>
               <div>
                 <strong>Status:</strong> Up
               </div>
               <div>
-                <strong>Last Checked:</strong>{" "}
+                <strong>Last Checked:</strong>{' '}
                 {new Date(statusDetails.last_checked_at!).toLocaleString()}
               </div>
               <div>
-                <strong>Average Response Time:</strong> {averageResponseTime}{" "}
+                <strong>Average Response Time:</strong> {averageResponseTime}{' '}
                 seconds
               </div>
               <Link
@@ -183,13 +183,13 @@ export default function Project() {
                 More Info
               </Link>
             </>
-          ) : status === "down" ? (
+          ) : status === 'down' ? (
             <>
               <div>
                 <strong>Status:</strong> Down
               </div>
               <div>
-                <strong>Last Checked:</strong>{" "}
+                <strong>Last Checked:</strong>{' '}
                 {new Date(statusDetails.last_checked_at!).toLocaleString()}
               </div>
               <Link
@@ -199,13 +199,13 @@ export default function Project() {
                 More Info
               </Link>
             </>
-          ) : status === "validating" ? (
+          ) : status === 'validating' ? (
             <>
               <div>
                 <strong>Status:</strong> Validating
               </div>
               <div>
-                <strong>Last Checked:</strong>{" "}
+                <strong>Last Checked:</strong>{' '}
                 {new Date(statusDetails.last_checked_at!).toLocaleString()}
               </div>
               <div>
@@ -313,9 +313,9 @@ export default function Project() {
         </div>
         <div className="md:w-2/3 md:pl-8">
           <div className="flex justify-between items-center mb-4">
-            <Link href={fromHome ? "/" : "/projects"}>
+            <Link href={fromHome ? '/' : '/projects'}>
               <p className="text-blue-500 hover:underline">
-                &larr; {fromHome ? "Return to Home" : "Return to All Projects"}
+                &larr; {fromHome ? 'Return to Home' : 'Return to All Projects'}
               </p>
             </Link>
             {fromHome && (

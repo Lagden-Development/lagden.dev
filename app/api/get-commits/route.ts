@@ -1,11 +1,11 @@
-import axios from "axios";
-import { NextResponse } from "next/server";
-import projects from "../../../public/projects.json";
+import axios from 'axios';
+import { NextResponse } from 'next/server';
+import projects from '../../../public/projects.json';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const owner = searchParams.get("owner");
-  const repo = searchParams.get("repo");
+  const owner = searchParams.get('owner');
+  const repo = searchParams.get('repo');
 
   const project = projects.find((project: { githubUrl: string }) => {
     const repoNameMatch = project.githubUrl.match(
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   if (!owner || !repo || !project) {
     return new NextResponse(
       JSON.stringify({
-        error: "Invalid owner, repo, or project not in whitelist",
+        error: 'Invalid owner, repo, or project not in whitelist',
       }),
       { status: 400 }
     );
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error(error);
     return new NextResponse(
-      JSON.stringify({ error: "Error fetching commits" }),
+      JSON.stringify({ error: 'Error fetching commits' }),
       { status: 500 }
     );
   }

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from 'react';
 
 type Commit = {
   sha: string;
@@ -30,7 +30,7 @@ const CommitModal: React.FC<CommitModalProps> = ({
 }) => {
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
-      const modalContent = document.querySelector(".modal-content");
+      const modalContent = document.querySelector('.modal-content');
       if (modalContent && !modalContent.contains(event.target as Node)) {
         onClose();
       }
@@ -39,9 +39,9 @@ const CommitModal: React.FC<CommitModalProps> = ({
   );
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [handleClickOutside]);
 
@@ -67,7 +67,7 @@ const CommitModal: React.FC<CommitModalProps> = ({
           >
             {commit.sha}
           </a>
-          {" - "}
+          {' - '}
           <a
             href={commit.author.html_url}
             target="_blank"
@@ -75,7 +75,7 @@ const CommitModal: React.FC<CommitModalProps> = ({
           >
             {commit.commit.author.name}
           </a>
-          {" - "}
+          {' - '}
           {new Date(commit.commit.author.date).toLocaleString()}
         </p>
         <p>{commit.commit.message}</p>

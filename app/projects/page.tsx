@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import LoadingSpinner from "../components/LoadingSpinner";
+import React from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 interface Project {
   id: string;
@@ -18,14 +18,14 @@ export default function Projects() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch("/projects.json")
+    fetch('/projects.json')
       .then((res) => res.json())
       .then((data: Project[]) => {
         setProjects(data);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading projects: ", err);
+        console.error('Error loading projects: ', err);
         setIsLoading(false);
       });
   }, []);

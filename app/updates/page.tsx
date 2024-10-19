@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Link from "next/link";
-import LoadingSpinner from "../components/LoadingSpinner";
-import CommitModal from "../components/CommitModal";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Link from 'next/link';
+import LoadingSpinner from '../components/LoadingSpinner';
+import CommitModal from '../components/CommitModal';
 
 type Commit = {
   sha: string;
@@ -30,10 +30,10 @@ export default function Updates() {
   useEffect(() => {
     async function fetchCommits() {
       try {
-        const response = await axios.get<Commit[]>("/api/get-commits", {
+        const response = await axios.get<Commit[]>('/api/get-commits', {
           params: {
-            owner: "Lagden-Development",
-            repo: "lagden.dev",
+            owner: 'Lagden-Development',
+            repo: 'lagden.dev',
           },
         });
         setCommits(response.data);
@@ -99,7 +99,7 @@ export default function Updates() {
                     >
                       {commit.sha.substring(0, 7)}
                     </Link>
-                    {" - "}
+                    {' - '}
                     <a
                       href={commit.author.html_url}
                       target="_blank"
@@ -107,7 +107,7 @@ export default function Updates() {
                     >
                       {commit.commit.author.name}
                     </a>
-                    {" - "}
+                    {' - '}
                     {new Date(commit.commit.author.date).toLocaleString()}
                   </p>
                 </div>

@@ -1,12 +1,12 @@
 // app/search/tag/[tagName]/page.tsx
-"use client";
+'use client';
 
-import React from "react";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import LoadingSpinner from "../../../components/LoadingSpinner";
+import React from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
+import LoadingSpinner from '../../../components/LoadingSpinner';
 
 interface Project {
   id: string;
@@ -19,14 +19,14 @@ interface Project {
 export default function TagSearch() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const tagName = decodeURIComponent(pathname.split("/").pop()!.toLowerCase());
-  const fromProject = searchParams.get("fromProject");
+  const tagName = decodeURIComponent(pathname.split('/').pop()!.toLowerCase());
+  const fromProject = searchParams.get('fromProject');
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch("/projects.json")
+    fetch('/projects.json')
       .then((res) => res.json())
       .then((data: Project[]) => {
         const filteredProjects = data.filter((project) =>
@@ -36,7 +36,7 @@ export default function TagSearch() {
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading projects: ", err);
+        console.error('Error loading projects: ', err);
         setIsLoading(false);
       });
   }, [tagName]);

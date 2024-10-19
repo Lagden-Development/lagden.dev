@@ -1,11 +1,11 @@
 // app/people/page.tsx
-"use client";
+'use client';
 
-import React from "react";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import LoadingSpinner from "../components/LoadingSpinner";
+import React from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 interface Person {
   id: string;
@@ -19,14 +19,14 @@ export default function People() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch("/people.json")
+    fetch('/people.json')
       .then((res) => res.json())
       .then((data: Person[]) => {
         setPeople(data);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading people: ", err);
+        console.error('Error loading people: ', err);
         setIsLoading(false);
       });
   }, []);
@@ -53,8 +53,8 @@ export default function People() {
 
   const gridColsClass =
     people.length === 2
-      ? "sm:grid-cols-2 lg:grid-cols-2 justify-center"
-      : "sm:grid-cols-2 lg:grid-cols-3";
+      ? 'sm:grid-cols-2 lg:grid-cols-2 justify-center'
+      : 'sm:grid-cols-2 lg:grid-cols-3';
 
   return (
     <div className="flex justify-center">

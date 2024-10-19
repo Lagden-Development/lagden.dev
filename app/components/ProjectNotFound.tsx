@@ -1,6 +1,6 @@
 // components/ProjectNotFound.tsx
-import React from "react";
-import Link from "next/link";
+import React from 'react';
+import Link from 'next/link';
 
 export default function ProjectNotFound() {
   return (
@@ -13,7 +13,7 @@ export default function ProjectNotFound() {
 
         <p className="text-lg mb-4">
           If you navigated here from a link on this site, please report the
-          issue on our{" "}
+          issue on our{' '}
           <a
             href="https://github.com/Lagden-Development/lagden.dev/issues/new"
             target="_blank"

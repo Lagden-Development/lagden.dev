@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -12,10 +12,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   // Utility function to determine active link for desktop
   const getDesktopLinkClass = (path: string) => {
     const baseClasses =
-      "mx-2 rounded-lg transition duration-200 ease-in px-3 py-1";
-    const activeClasses = "bg-gray-500 bg-opacity-50 text-white";
+      'mx-2 rounded-lg transition duration-200 ease-in px-3 py-1';
+    const activeClasses = 'bg-gray-500 bg-opacity-50 text-white';
     const inactiveClasses =
-      "text-nobel hover:bg-gray-500 hover:bg-opacity-50 hover:text-white";
+      'text-nobel hover:bg-gray-500 hover:bg-opacity-50 hover:text-white';
 
     return pathname === path
       ? `${baseClasses} ${activeClasses}`
@@ -25,9 +25,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   // Utility function to determine active link for mobile
   const getMobileLinkClass = (path: string) => {
     const baseClasses =
-      "block w-full px-4 py-2 rounded-lg transition duration-200 ease-in";
-    const activeClasses = "bg-gray-700 text-white";
-    const inactiveClasses = "text-nobel hover:bg-gray-700 hover:text-white";
+      'block w-full px-4 py-2 rounded-lg transition duration-200 ease-in';
+    const activeClasses = 'bg-gray-700 text-white';
+    const inactiveClasses = 'text-nobel hover:bg-gray-700 hover:text-white';
 
     return pathname === path
       ? `${baseClasses} ${activeClasses}`
@@ -50,12 +50,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isMenuOpen) {
-      document.addEventListener("click", handleClickOutside);
+      document.addEventListener('click', handleClickOutside);
     } else {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     }
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, [isMenuOpen, handleClickOutside]);
 
@@ -68,13 +68,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Link>
           {/* Desktop Links */}
           <div className="hidden md:flex">
-            <Link href="/" className={getDesktopLinkClass("/")}>
+            <Link href="/" className={getDesktopLinkClass('/')}>
               Home
             </Link>
-            <Link href="/projects" className={getDesktopLinkClass("/projects")}>
+            <Link href="/projects" className={getDesktopLinkClass('/projects')}>
               Projects
             </Link>
-            <Link href="/people" className={getDesktopLinkClass("/people")}>
+            <Link href="/people" className={getDesktopLinkClass('/people')}>
               People
             </Link>
           </div>
@@ -82,7 +82,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex items-center relative">
           {/* Desktop Link for Updates */}
           <div className="hidden md:flex">
-            <Link href="/updates" className={getDesktopLinkClass("/updates")}>
+            <Link href="/updates" className={getDesktopLinkClass('/updates')}>
               Updates
             </Link>
           </div>
@@ -100,28 +100,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             >
               <Link
                 href="/"
-                className={getMobileLinkClass("/")}
+                className={getMobileLinkClass('/')}
                 onClick={closeMenu}
               >
                 Home
               </Link>
               <Link
                 href="/projects"
-                className={getMobileLinkClass("/projects")}
+                className={getMobileLinkClass('/projects')}
                 onClick={closeMenu}
               >
                 Projects
               </Link>
               <Link
                 href="/people"
-                className={getMobileLinkClass("/people")}
+                className={getMobileLinkClass('/people')}
                 onClick={closeMenu}
               >
                 People
               </Link>
               <Link
                 href="/updates"
-                className={getMobileLinkClass("/updates")}
+                className={getMobileLinkClass('/updates')}
                 onClick={closeMenu}
               >
                 Updates
@@ -132,7 +132,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </nav>
       <main className="flex-grow p-4 mt-16">{children}</main>
       <footer className="p-4 text-center border-t border-gray-800">
-        © 2024 Lagden Development.{" "}
+        © 2024 Lagden Development.{' '}
         <a
           href="https://github.com/Lagden-Development/lagden.dev"
           className="underline text-white"

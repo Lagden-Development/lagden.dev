@@ -1,9 +1,9 @@
 // app/shutdown/page.tsx
-"use client";
+'use client';
 
-import React, { Suspense } from "react";
-import LoadingSpinner from "../components/LoadingSpinner";
-import ShutdownContent from "../components/ShutdownContent";
+import React, { Suspense } from 'react';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ShutdownContent from '../components/ShutdownContent';
 
 export default function ShutdownPage() {
   return (

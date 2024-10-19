@@ -1,9 +1,9 @@
 // components/ShutdownContent.tsx
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import LoadingSpinner from "../components/LoadingSpinner";
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 interface ShutdownProject {
   projectID: string;
@@ -21,24 +21,24 @@ export default function ShutdownContent() {
   const [error, setError] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
-  const projectId = searchParams.get("projectId");
+  const projectId = searchParams.get('projectId');
 
   useEffect(() => {
     if (projectId) {
-      fetch("/shutdown_projects.json")
+      fetch('/shutdown_projects.json')
         .then((res) => res.json())
         .then((projects: ShutdownProject[]) => {
           const foundProject = projects.find((p) => p.projectID === projectId);
           if (foundProject) {
             setProject(foundProject);
           } else {
-            setError("Project not found.");
+            setError('Project not found.');
           }
           setIsLoading(false);
         })
         .catch((err) => {
-          console.error("Error loading shutdown projects: ", err);
-          setError("Failed to load shutdown project data.");
+          console.error('Error loading shutdown projects: ', err);
+          setError('Failed to load shutdown project data.');
           setIsLoading(false);
         });
     } else {
@@ -62,7 +62,7 @@ export default function ShutdownContent() {
         </h1>
         <p className="text-lg">
           Sorry, this project has been shut down. If you have any questions,
-          please{" "}
+          please{' '}
           <a
             href="mailto:contact@lagden.dev"
             className="text-blue-500 underline"
@@ -77,7 +77,7 @@ export default function ShutdownContent() {
           website you were just on ({project.projectURL}) has been shut down by
           one of our members. You are now on the lagden.dev website. We are a
           small group of developers who work on various projects. If you have
-          any questions, please{" "}
+          any questions, please{' '}
           <a
             href="mailto:contact@lagden.dev"
             className="text-blue-500 underline"
@@ -96,14 +96,14 @@ export default function ShutdownContent() {
           <br />
           {project.githubRepo && (
             <>
-              <strong>GitHub Repository:</strong>{" "}
+              <strong>GitHub Repository:</strong>{' '}
               <a
                 href={project.githubRepo}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline hover:text-blue-700"
               >
-                {project.githubRepo.replace("https://github.com/", "")}
+                {project.githubRepo.replace('https://github.com/', '')}
               </a>
               <br />
             </>
@@ -123,7 +123,7 @@ export default function ShutdownContent() {
       </h1>
       <p className="text-lg">
         Sorry, this project has been shut down. If you have any questions,
-        please{" "}
+        please{' '}
         <a href="mailto:contact@lagden.dev" className="text-blue-500 underline">
           contact us
         </a>
@@ -134,7 +134,7 @@ export default function ShutdownContent() {
         Confused? You have been redirected to https://lagden.dev/ because the
         website you were just on has been shut down by one of our members. You
         are now on the lagden.dev website. We are a small group of developers
-        who work on various projects. If you have any questions, please{" "}
+        who work on various projects. If you have any questions, please{' '}
         <a href="mailto:contact@lagden.dev" className="text-blue-500 underline">
           contact us
         </a>

@@ -1,15 +1,15 @@
 // app/people/[personId]/page.tsx
-"use client";
+'use client';
 
-import React from "react";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { remark } from "remark";
-import remarkHtml from "remark-html";
-import { usePathname } from "next/navigation";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import PersonNotFound from "../../components/PersonNotFound";
+import React from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { remark } from 'remark';
+import remarkHtml from 'remark-html';
+import { usePathname } from 'next/navigation';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import PersonNotFound from '../../components/PersonNotFound';
 
 interface Person {
   id: string;
@@ -27,16 +27,16 @@ interface Person {
 
 export default function Person() {
   const pathname = usePathname();
-  const personId = pathname.split("/").pop()?.toLowerCase();
+  const personId = pathname.split('/').pop()?.toLowerCase();
 
   const [person, setPerson] = useState<Person | null>(null);
-  const [bio, setBio] = useState<string>("");
+  const [bio, setBio] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isNotFound, setIsNotFound] = useState<boolean>(false);
 
   useEffect(() => {
     if (personId) {
-      fetch("/people.json")
+      fetch('/people.json')
         .then((res) => res.json())
         .then((people: Person[]) => {
           const foundPerson = people.find(
@@ -62,7 +62,7 @@ export default function Person() {
           }
         })
         .catch((err) => {
-          console.error("Error loading person: ", err);
+          console.error('Error loading person: ', err);
           setIsNotFound(true);
           setIsLoading(false);
         });
@@ -91,7 +91,7 @@ export default function Person() {
           <h1 className="text-4xl font-bold mb-2">{person!.name}</h1>
           <p className="text-lg mb-2">{person!.role}</p>
           <p className="text-gray-500 mb-4">
-            {person!.location} <span className="mx-2">|</span>{" "}
+            {person!.location} <span className="mx-2">|</span>{' '}
             {person!.pronouns}
           </p>
           <div className="mb-4">

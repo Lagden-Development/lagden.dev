@@ -1,20 +1,20 @@
 // app/api/project-status/route.ts
-import axios from "axios";
+import axios from 'axios';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const statusId = searchParams.get("statusId");
+  const statusId = searchParams.get('statusId');
 
   if (!statusId) {
     return new Response(
-      JSON.stringify({ error: "statusId query parameter is required" }),
+      JSON.stringify({ error: 'statusId query parameter is required' }),
       { status: 400 }
     );
   }
 
   try {
     const response = await axios.get(
-      "https://uptime.betterstack.com/api/v2/monitors",
+      'https://uptime.betterstack.com/api/v2/monitors',
       {
         headers: {
           Authorization: `Bearer ${process.env.BETTERSTACK_API_TOKEN}`,
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
     );
 
     if (!monitor) {
-      return new Response(JSON.stringify({ error: "Monitor not found" }), {
+      return new Response(JSON.stringify({ error: 'Monitor not found' }), {
         status: 404,
       });
     }
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error(error);
     return new Response(
-      JSON.stringify({ error: "Error fetching monitor status" }),
+      JSON.stringify({ error: 'Error fetching monitor status' }),
       { status: 500 }
     );
   }
