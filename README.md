@@ -1,4 +1,6 @@
-[![Better Stack Badge](https://uptime.betterstack.com/status-badges/v2/monitor/1hfqv.svg)](https://status.lagden.dev) ![GitHub branch check runs](https://img.shields.io/github/check-runs/Lagden-Development/lagden.dev/main) ![Codacy Badge](https://app.codacy.com/project/badge/Grade/e661a3949ba8451fbcf7d42dcb903dbd)
+[![Better Stack Badge](https://uptime.betterstack.com/status-badges/v2/monitor/1hfqv.svg)](https://status.lagden.dev)
+![GitHub branch check runs](https://img.shields.io/github/check-runs/Lagden-Development/lagden.dev/main)
+![Codacy Badge](https://app.codacy.com/project/badge/Grade/e661a3949ba8451fbcf7d42dcb903dbd)
 
 # lagden.dev
 
