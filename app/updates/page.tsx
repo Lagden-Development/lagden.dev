@@ -61,15 +61,15 @@ export default function Updates() {
 
   return (
     <div className="flex justify-center">
-      <div className="max-w-4xl w-full text-center px-4">
+      <div className="w-full max-w-4xl px-4 text-center">
         <section className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Website Updates</h1>
+          <h1 className="mb-4 text-4xl font-bold">Website Updates</h1>
           <p className="text-lg">
             Here are the latest commits to the Lagden Development website
             repository.
           </p>
           <Link href="/" passHref>
-            <p className="text-gray-400 mt-4 cursor-pointer hover:underline">
+            <p className="mt-4 cursor-pointer text-gray-400 hover:underline">
               Go back to Home
             </p>
           </Link>
@@ -83,7 +83,7 @@ export default function Updates() {
               {commits.map((commit) => (
                 <div
                   key={commit.sha}
-                  className="border border-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-800"
+                  className="cursor-pointer rounded-lg border border-gray-700 p-4 hover:bg-gray-800"
                   onClick={() => handleCommitClick(commit)}
                 >
                   <p className="text-xl font-bold">

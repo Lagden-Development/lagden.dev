@@ -59,7 +59,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className="text-white bg-black">
+      <body className="bg-black text-white">
         <GoogleAnalytics gaId="G-JHDS9FXCK2" />
         <Layout>{children}</Layout>
       </body>

@@ -79,18 +79,18 @@ export default function Person() {
 
   return (
     <div className="flex justify-center py-8">
-      <div className="max-w-6xl w-full flex flex-col md:flex-row px-4">
+      <div className="flex w-full max-w-6xl flex-col px-4 md:flex-row">
         <div className="md:w-1/3 md:pr-8">
           <Image
             src={person!.imgSrc}
             alt={person!.name}
             width={400}
             height={400}
-            className="object-cover rounded mb-4"
+            className="mb-4 rounded object-cover"
           />
-          <h1 className="text-4xl font-bold mb-2">{person!.name}</h1>
-          <p className="text-lg mb-2">{person!.role}</p>
-          <p className="text-gray-500 mb-4">
+          <h1 className="mb-2 text-4xl font-bold">{person!.name}</h1>
+          <p className="mb-2 text-lg">{person!.role}</p>
+          <p className="mb-4 text-gray-500">
             {person!.location} <span className="mx-2">|</span>{' '}
             {person!.pronouns}
           </p>
@@ -98,13 +98,13 @@ export default function Person() {
             {person!.skills.map((skill, index) => (
               <span
                 key={index}
-                className="inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded mr-2 mb-2"
+                className="mb-2 mr-2 inline-block rounded bg-gray-200 px-2 py-1 text-xs text-gray-800"
               >
                 {skill}
               </span>
             ))}
           </div>
-          <div className="flex space-x-4 mb-4">
+          <div className="mb-4 flex space-x-4">
             {person!.githubUrl && (
               <a
                 href={person!.githubUrl}
@@ -139,11 +139,11 @@ export default function Person() {
         </div>
         <div className="md:w-2/3 md:pl-8">
           <Link href="/people">
-            <p className="text-blue-500 hover:underline mb-4 inline-block">
+            <p className="mb-4 inline-block text-blue-500 hover:underline">
               &larr; Back to All People
             </p>
           </Link>
-          <hr className="border-gray-800 border-t-2 mb-4" />
+          <hr className="mb-4 border-t-2 border-gray-800" />
           {isLoading ? (
             <LoadingSpinner />
           ) : (

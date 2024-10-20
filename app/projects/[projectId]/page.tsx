@@ -143,10 +143,10 @@ export default function Project() {
   }
 
   const statusIndicator = status ? (
-    <div className="relative flex items-center ml-4">
-      <div className="relative group">
+    <div className="relative ml-4 flex items-center">
+      <div className="group relative">
         <span
-          className={`inline-block w-6 h-6 mr-2 rounded-full ${
+          className={`mr-2 inline-block h-6 w-6 rounded-full ${
             status === 'up'
               ? 'bg-green-500'
               : status === 'down'
@@ -160,7 +160,7 @@ export default function Project() {
           }}
         ></span>
         <div
-          className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 text-xs text-center text-white bg-black rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute bottom-full left-1/2 mb-2 w-64 -translate-x-1/2 transform rounded-lg bg-black p-2 text-center text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
           style={{ zIndex: 10 }}
         >
           {status === 'up' ? (
@@ -253,20 +253,20 @@ export default function Project() {
 
   return (
     <div className="flex justify-center py-8">
-      <div className="max-w-6xl w-full flex flex-col md:flex-row px-4">
+      <div className="flex w-full max-w-6xl flex-col px-4 md:flex-row">
         <div className="md:w-1/3 md:pr-8">
           <Image
             src={project!.imgSrc}
             alt={project!.title}
             width={400}
             height={400}
-            className="object-cover rounded mb-4"
+            className="mb-4 rounded object-cover"
           />
           <div className="flex items-center">
-            <h1 className="text-4xl font-bold mb-2">{project!.title}</h1>
+            <h1 className="mb-2 text-4xl font-bold">{project!.title}</h1>
             {statusIndicator}
           </div>
-          <p className="text-lg mb-4">{project!.description}</p>
+          <p className="mb-4 text-lg">{project!.description}</p>
           <div className="mb-4">
             {project!.tags.map((tag, index) => (
               <Link
@@ -274,7 +274,7 @@ export default function Project() {
                 href={`/search/tag/${tag}?fromProject=${project!.id}`}
                 passHref
               >
-                <span className="inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded mr-2 mb-2 cursor-pointer hover:bg-gray-300">
+                <span className="mb-2 mr-2 inline-block cursor-pointer rounded bg-gray-200 px-2 py-1 text-xs text-gray-800 hover:bg-gray-300">
                   {tag}
                 </span>
               </Link>
@@ -302,7 +302,7 @@ export default function Project() {
               </a>
             )}
           </div>
-          <div className="mt-4 mb-4">
+          <div className="mb-4 mt-4">
             <Link
               href={`/projects/${projectId}/commits`}
               className="text-blue-500 hover:underline"
@@ -312,7 +312,7 @@ export default function Project() {
           </div>
         </div>
         <div className="md:w-2/3 md:pl-8">
-          <div className="flex justify-between items-center mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <Link href={fromHome ? '/' : '/projects'}>
               <p className="text-blue-500 hover:underline">
                 &larr; {fromHome ? 'Return to Home' : 'Return to All Projects'}
@@ -326,7 +326,7 @@ export default function Project() {
               </Link>
             )}
           </div>
-          <hr className="border-gray-800 border-t-2 mb-4" />
+          <hr className="mb-4 border-t-2 border-gray-800" />
           {isLoading ? (
             <LoadingSpinner />
           ) : (

@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function LoadingSpinner() {
   return (
-    <div className="flex justify-center items-center h-full">
+    <div className="flex h-full items-center justify-center">
       <div
         style={{
           border: '2px solid transparent',

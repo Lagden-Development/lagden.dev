@@ -7,7 +7,7 @@ import ShutdownContent from '../components/ShutdownContent';
 
 export default function ShutdownPage() {
   return (
-    <div className="max-w-4xl mx-auto text-center px-4">
+    <div className="mx-auto max-w-4xl px-4 text-center">
       <Suspense fallback={<LoadingSpinner />}>
         <ShutdownContent />
       </Suspense>

@@ -60,11 +60,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [isMenuOpen, handleClickOutside]);
 
   return (
-    <div className="flex flex-col min-h-screen text-white bg-black">
-      <nav className="fixed top-0 left-0 right-0 p-4 flex items-center justify-between border-b border-gray-800 bg-black z-10">
+    <div className="flex min-h-screen flex-col bg-black text-white">
+      <nav className="fixed left-0 right-0 top-0 z-10 flex items-center justify-between border-b border-gray-800 bg-black p-4">
         <div className="flex items-center">
           <Link href="/">
-            <span className="font-bold text-white text-xl">lagden.dev</span>
+            <span className="text-xl font-bold text-white">lagden.dev</span>
           </Link>
           {/* Desktop Links */}
           <div className="hidden md:flex">
@@ -79,7 +79,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
         </div>
-        <div className="flex items-center relative">
+        <div className="relative flex items-center">
           {/* Desktop Link for Updates */}
           <div className="hidden md:flex">
             <Link href="/updates" className={getDesktopLinkClass('/updates')}>
@@ -96,7 +96,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {isMenuOpen && (
             <div
               ref={menuRef}
-              className="absolute top-full right-0 mt-2 py-2 w-48 bg-black border border-gray-600 rounded-lg shadow-lg z-20"
+              className="absolute right-0 top-full z-20 mt-2 w-48 rounded-lg border border-gray-600 bg-black py-2 shadow-lg"
             >
               <Link
                 href="/"
@@ -130,12 +130,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           )}
         </div>
       </nav>
-      <main className="flex-grow p-4 mt-16">{children}</main>
-      <footer className="p-4 text-center border-t border-gray-800">
+      <main className="mt-16 flex-grow p-4">{children}</main>
+      <footer className="border-t border-gray-800 p-4 text-center">
         © 2024 Lagden Development.{' '}
         <a
           href="https://github.com/Lagden-Development/lagden.dev"
-          className="underline text-white"
+          className="text-white underline"
           target="_blank"
         >
           GitHub

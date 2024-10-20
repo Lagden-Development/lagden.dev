@@ -34,9 +34,9 @@ export default function Home() {
 
   return (
     <div className="flex justify-center">
-      <div className="max-w-4xl w-full text-center px-4">
+      <div className="w-full max-w-4xl px-4 text-center">
         <section className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="mb-4 text-4xl font-bold">
             We are Lagden Development.
           </h1>
           <p className="text-lg">
@@ -45,7 +45,7 @@ export default function Home() {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-3xl font-bold mb-4">About Us</h2>
+          <h2 className="mb-4 text-3xl font-bold">About Us</h2>
           <p className="text-lg">
             We specialize in web development, covering front-end technologies
             like React, NextJS, and Tailwind; back-end technologies like
@@ -57,29 +57,29 @@ export default function Home() {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-3xl font-bold mb-4">Featured Projects</h2>
+          <h2 className="mb-4 text-3xl font-bold">Featured Projects</h2>
           {isLoading ? (
             <LoadingSpinner />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {featuredProjects.map((project) => (
                 <Link
                   key={project.id}
                   href={`/projects/${project.id}?from=home`}
                   passHref
                 >
-                  <div className="border border-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-800 flex flex-col justify-between h-full">
+                  <div className="flex h-full cursor-pointer flex-col justify-between rounded-lg border border-gray-700 p-4 hover:bg-gray-800">
                     <div>
-                      <div className="w-full h-40 mb-4 flex items-center justify-center">
+                      <div className="mb-4 flex h-40 w-full items-center justify-center">
                         <Image
                           src={project.imgSrc}
                           alt={project.title}
                           width={160}
                           height={160}
-                          className="object-contain rounded"
+                          className="rounded object-contain"
                         />
                       </div>
-                      <h3 className="text-2xl font-bold mb-2">
+                      <h3 className="mb-2 text-2xl font-bold">
                         {project.title}
                       </h3>
                       <p className="text-gray-400">{project.description}</p>
@@ -90,15 +90,15 @@ export default function Home() {
             </div>
           )}
           <Link href="/projects" passHref>
-            <p className="text-gray-400 mt-4 cursor-pointer hover:underline">
+            <p className="mt-4 cursor-pointer text-gray-400 hover:underline">
               View all projects
             </p>
           </Link>
         </section>
 
         <section>
-          <h2 className="text-3xl font-bold mb-4">Contact Us</h2>
-          <p className="text-lg mb-4">
+          <h2 className="mb-4 text-3xl font-bold">Contact Us</h2>
+          <p className="mb-4 text-lg">
             Get in touch with us through Email or GitHub.
           </p>
           <div className="flex justify-center space-x-4">

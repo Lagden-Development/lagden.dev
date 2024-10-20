@@ -56,8 +56,8 @@ export default function ShutdownContent() {
 
   if (project) {
     return (
-      <div className="max-w-4xl mx-auto text-center px-4">
-        <h1 className="text-4xl font-bold mb-4">
+      <div className="mx-auto max-w-4xl px-4 text-center">
+        <h1 className="mb-4 text-4xl font-bold">
           {project.projectName} has been shut down.
         </h1>
         <p className="text-lg">
@@ -87,7 +87,7 @@ export default function ShutdownContent() {
           .
         </p>
         <br />
-        <p className="text-md text-gray-500 mb-4">
+        <p className="text-md mb-4 text-gray-500">
           <strong>Project Name:</strong> {project.projectName}
           <br />
           <strong>Project Description:</strong> {project.projectDescription}
@@ -117,8 +117,8 @@ export default function ShutdownContent() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto text-center px-4">
-      <h1 className="text-4xl font-bold mb-4">
+    <div className="mx-auto max-w-4xl px-4 text-center">
+      <h1 className="mb-4 text-4xl font-bold">
         This project has been shut down.
       </h1>
       <p className="text-lg">

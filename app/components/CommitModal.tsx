@@ -46,20 +46,20 @@ const CommitModal: React.FC<CommitModalProps> = ({
   }, [handleClickOutside]);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-      <div className="modal-content bg-gray-900 text-white p-8 rounded-lg max-w-2xl w-full relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+      <div className="modal-content relative w-full max-w-2xl rounded-lg bg-gray-900 p-8 text-white">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-xl font-bold"
+          className="absolute right-4 top-4 text-xl font-bold"
         >
           &times;
         </button>
-        <h2 className="text-3xl font-bold mb-4">
+        <h2 className="mb-4 text-3xl font-bold">
           {commit.commit.message.length > 50
             ? `${commit.commit.message.substring(0, 50)}...`
             : commit.commit.message}
         </h2>
-        <p className="text-gray-400 mb-4">
+        <p className="mb-4 text-gray-400">
           <a
             href={`https://github.com/${owner}/${repo}/commit/${commit.sha}`}
             target="_blank"

@@ -33,18 +33,18 @@ export default function People() {
 
   const PersonCard = ({ person }: { person: Person }) => (
     <Link href={`/people/${person.id}`} passHref>
-      <div className="border border-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-800 flex flex-col justify-between h-full">
+      <div className="flex h-full cursor-pointer flex-col justify-between rounded-lg border border-gray-700 p-4 hover:bg-gray-800">
         <div>
-          <div className="w-full h-40 mb-4 flex items-center justify-center">
+          <div className="mb-4 flex h-40 w-full items-center justify-center">
             <Image
               src={person.imgSrc}
               alt={person.name}
               width={160}
               height={160}
-              className="object-cover rounded"
+              className="rounded object-cover"
             />
           </div>
-          <h2 className="text-2xl font-bold mb-2">{person.name}</h2>
+          <h2 className="mb-2 text-2xl font-bold">{person.name}</h2>
           <p className="text-gray-400">{person.role}</p>
         </div>
       </div>
@@ -58,9 +58,9 @@ export default function People() {
 
   return (
     <div className="flex justify-center">
-      <div className="max-w-4xl w-full text-center px-4">
+      <div className="w-full max-w-4xl px-4 text-center">
         <section className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Our Team</h1>
+          <h1 className="mb-4 text-4xl font-bold">Our Team</h1>
           <p className="text-lg">
             Meet the dedicated professionals who make our organization great.
           </p>

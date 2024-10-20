@@ -111,14 +111,14 @@ const CommitsPage = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="max-w-4xl w-full text-center px-4">
+      <div className="w-full max-w-4xl px-4 text-center">
         <section className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Commit Updates</h1>
+          <h1 className="mb-4 text-4xl font-bold">Commit Updates</h1>
           <p className="text-lg">
             Latest commits to the {projectName} repository.
           </p>
           <Link href={`/projects/${projectId}`}>
-            <p className="text-gray-400 mt-4 cursor-pointer hover:underline">
+            <p className="mt-4 cursor-pointer text-gray-400 hover:underline">
               Go back to {projectName}
             </p>
           </Link>
@@ -132,7 +132,7 @@ const CommitsPage = () => {
               {commits.map((commit) => (
                 <div
                   key={commit.sha}
-                  className="border border-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-800"
+                  className="cursor-pointer rounded-lg border border-gray-700 p-4 hover:bg-gray-800"
                   onClick={() => handleCommitClick(commit)}
                 >
                   <p className="text-xl font-bold">
