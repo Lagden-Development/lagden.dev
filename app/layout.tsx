@@ -79,8 +79,7 @@ export const metadata = {
   },
   manifest: '/site.webmanifest',
   icons: {
-    icon: [{ url: '/favicon.ico' }, { url: '/icon.png', type: 'image/png' }],
-    apple: [{ url: '/apple-touch-icon.png' }],
+    icon: [{ url: '/icon.ico', type: 'image/png' }],
   },
   other: {
     'revisit-after': '7 days',
