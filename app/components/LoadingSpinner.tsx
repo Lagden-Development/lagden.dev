@@ -1,29 +1,9 @@
-// app/components/LoadingSpinner.tsx
 import React from 'react';
 
 export default function LoadingSpinner() {
   return (
-    <div className="flex h-full items-center justify-center">
-      <div
-        style={{
-          border: '2px solid transparent',
-          borderTop: '2px solid white',
-          borderRadius: '50%',
-          width: '30px',
-          height: '30px',
-          animation: 'spin 0.5s linear infinite',
-        }}
-      ></div>
-      <style jsx>{`
-        @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
+    <div className="flex h-full items-center justify-center p-8">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent" />
     </div>
   );
 }

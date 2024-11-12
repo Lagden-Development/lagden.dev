@@ -7,8 +7,10 @@ import Link from 'next/link';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import { usePathname, useSearchParams } from 'next/navigation';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import ProjectNotFound from '../../components/ProjectNotFound';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { GithubIcon, Globe, ArrowLeft, History } from 'lucide-react';
+import ProjectNotFound from '@/components/ProjectNotFound';
 
 interface Project {
   id: string;
@@ -94,7 +96,7 @@ export default function Project() {
                 fetchProjectStatus(foundProject.statusId);
               }, 30000); // 30 seconds
 
-              return () => clearInterval(interval); // Cleanup interval on component unmount
+              return () => clearInterval(interval);
             }
           } else {
             setIsNotFound(true);
@@ -134,14 +136,6 @@ export default function Project() {
       });
   };
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (isNotFound) {
-    return <ProjectNotFound />;
-  }
-
   const statusIndicator = status ? (
     <div className="relative ml-4 flex items-center">
       <div className="group relative">
@@ -159,83 +153,82 @@ export default function Project() {
             animation: 'waves 1.5s ease-in-out infinite',
           }}
         ></span>
-        <div
-          className="absolute bottom-full left-1/2 mb-2 w-64 -translate-x-1/2 transform rounded-lg bg-black p-2 text-center text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
-          style={{ zIndex: 10 }}
-        >
-          {status === 'up' ? (
-            <>
-              <div>
-                <strong>Status:</strong> Up
-              </div>
-              <div>
-                <strong>Last Checked:</strong>{' '}
-                {new Date(statusDetails.last_checked_at!).toLocaleString()}
-              </div>
-              <div>
-                <strong>Average Response Time:</strong> {averageResponseTime}{' '}
-                seconds
-              </div>
-              <Link
-                href="https://status.lagden.dev"
-                className="mt-2 text-blue-500 hover:underline"
-              >
-                More Info
-              </Link>
-            </>
-          ) : status === 'down' ? (
-            <>
-              <div>
-                <strong>Status:</strong> Down
-              </div>
-              <div>
-                <strong>Last Checked:</strong>{' '}
-                {new Date(statusDetails.last_checked_at!).toLocaleString()}
-              </div>
-              <Link
-                href="https://status.lagden.dev"
-                className="mt-2 text-blue-500 hover:underline"
-              >
-                More Info
-              </Link>
-            </>
-          ) : status === 'validating' ? (
-            <>
-              <div>
-                <strong>Status:</strong> Validating
-              </div>
-              <div>
-                <strong>Last Checked:</strong>{' '}
-                {new Date(statusDetails.last_checked_at!).toLocaleString()}
-              </div>
-              <div>
-                <strong>Information:</strong> Validation occurs after a period
-                of downtime to ensure the service is back up and running.
-              </div>
-              <Link
-                href="https://status.lagden.dev"
-                className="mt-2 text-blue-500 hover:underline"
-              >
-                More Info
-              </Link>
-            </>
-          ) : (
-            <>
-              <div>
-                <strong>Status:</strong> Unknown
-              </div>
-              <div>
-                <strong>Last Checked:</strong> N/A
-              </div>
-              <Link
-                href="https://status.lagden.dev"
-                className="mt-2 text-blue-500 hover:underline"
-              >
-                More Info
-              </Link>
-            </>
-          )}
-        </div>
+        <Card className="absolute bottom-full left-1/2 mb-2 w-64 -translate-x-1/2 transform border-gray-800 bg-black p-2 text-center text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+          <CardContent className="p-4">
+            {status === 'up' ? (
+              <>
+                <div className="mb-1">
+                  <strong>Status:</strong> Up
+                </div>
+                <div className="mb-1">
+                  <strong>Last Checked:</strong>{' '}
+                  {new Date(statusDetails.last_checked_at!).toLocaleString()}
+                </div>
+                <div className="mb-2">
+                  <strong>Average Response Time:</strong> {averageResponseTime}{' '}
+                  seconds
+                </div>
+                <Link
+                  href="https://status.lagden.dev"
+                  className="text-blue-400 hover:text-blue-300"
+                >
+                  More Info
+                </Link>
+              </>
+            ) : status === 'down' ? (
+              <>
+                <div className="mb-1">
+                  <strong>Status:</strong> Down
+                </div>
+                <div className="mb-2">
+                  <strong>Last Checked:</strong>{' '}
+                  {new Date(statusDetails.last_checked_at!).toLocaleString()}
+                </div>
+                <Link
+                  href="https://status.lagden.dev"
+                  className="text-blue-400 hover:text-blue-300"
+                >
+                  More Info
+                </Link>
+              </>
+            ) : status === 'validating' ? (
+              <>
+                <div className="mb-1">
+                  <strong>Status:</strong> Validating
+                </div>
+                <div className="mb-1">
+                  <strong>Last Checked:</strong>{' '}
+                  {new Date(statusDetails.last_checked_at!).toLocaleString()}
+                </div>
+                <div className="mb-2">
+                  <strong>Information:</strong> Validation occurs after a period
+                  of downtime to ensure the service is back up and running.
+                </div>
+                <Link
+                  href="https://status.lagden.dev"
+                  className="text-blue-400 hover:text-blue-300"
+                >
+                  More Info
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="mb-1">
+                  <strong>Status:</strong> Unknown
+                </div>
+                <div className="mb-2">
+                  <strong>Last Checked:</strong> N/A
+                </div>
+                <Link
+                  href="https://status.lagden.dev"
+                  className="text-blue-400 hover:text-blue-300"
+                >
+                  More Info
+                </Link>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </div>
       <style jsx>{`
         @keyframes waves {
@@ -251,90 +244,131 @@ export default function Project() {
     </div>
   ) : null;
 
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-black">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (isNotFound) {
+    return <ProjectNotFound />;
+  }
+
   return (
-    <div className="flex justify-center py-8">
-      <div className="flex w-full max-w-6xl flex-col px-4 md:flex-row">
+    <div className="min-h-screen bg-black py-12">
+      <div className="mx-auto flex max-w-6xl flex-col px-4 text-white md:flex-row">
         <div className="md:w-1/3 md:pr-8">
-          <Image
-            src={project!.imgSrc}
-            alt={project!.title}
-            width={400}
-            height={400}
-            className="mb-4 rounded object-cover"
-          />
-          <div className="flex items-center">
-            <h1 className="mb-2 text-4xl font-bold">{project!.title}</h1>
-            {statusIndicator}
-          </div>
-          <p className="mb-4 text-lg">{project!.description}</p>
-          <div className="mb-4">
-            {project!.tags.map((tag, index) => (
-              <Link
-                key={index}
-                href={`/search/tag/${tag}?fromProject=${project!.id}`}
-                passHref
-              >
-                <span className="mb-2 mr-2 inline-block cursor-pointer rounded bg-gray-200 px-2 py-1 text-xs text-gray-800 hover:bg-gray-300">
-                  {tag}
-                </span>
-              </Link>
-            ))}
-          </div>
-          <div className="flex space-x-4">
-            {project!.githubUrl && (
-              <a
-                href={project!.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-nobel hover:text-white"
-              >
-                <i className="fab fa-github fa-2x"></i>
-              </a>
-            )}
-            {project!.webUrl && (
-              <a
-                href={project!.webUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-nobel hover:text-white"
-              >
-                <i className="fas fa-globe fa-2x"></i>
-              </a>
-            )}
-          </div>
-          <div className="mb-4 mt-4">
-            <Link
-              href={`/projects/${projectId}/commits`}
-              className="text-blue-500 hover:underline"
-            >
-              View Commit History
-            </Link>
-          </div>
-        </div>
-        <div className="md:w-2/3 md:pl-8">
-          <div className="mb-4 flex items-center justify-between">
-            <Link href={fromHome ? '/' : '/projects'}>
-              <p className="text-blue-500 hover:underline">
-                &larr; {fromHome ? 'Return to Home' : 'Return to All Projects'}
+          <Card className="border-gray-800 bg-black">
+            <CardContent className="p-6">
+              <Image
+                src={project!.imgSrc}
+                alt={project!.title}
+                width={400}
+                height={400}
+                className="mb-6 rounded object-contain"
+              />
+              <div className="flex items-center">
+                <h1 className="text-4xl font-bold text-white">
+                  {project!.title}
+                </h1>
+                {statusIndicator}
+              </div>
+              <p className="my-4 text-lg text-gray-300">
+                {project!.description}
               </p>
-            </Link>
-            {fromHome && (
-              <Link href="/projects">
-                <p className="text-blue-500 hover:underline">
-                  View All Projects
-                </p>
-              </Link>
-            )}
-          </div>
-          <hr className="mb-4 border-t-2 border-gray-800" />
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <div
-              dangerouslySetInnerHTML={{ __html: readme }}
-              className="prose"
-            ></div>
-          )}
+              <div className="mb-6 flex flex-wrap gap-2">
+                {project!.tags.map((tag, index) => (
+                  <Link
+                    key={index}
+                    href={`/search/tag/${tag}?fromProject=${project!.id}`}
+                  >
+                    <span className="inline-block rounded bg-gray-800 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700">
+                      {tag}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              <div className="mb-6 flex space-x-4">
+                {project!.githubUrl && (
+                  <Button
+                    variant="secondary"
+                    className="bg-gray-800 text-white hover:bg-gray-700"
+                    asChild
+                  >
+                    <a
+                      href={project!.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <GithubIcon className="mr-2 h-4 w-4" />
+                      GitHub
+                    </a>
+                  </Button>
+                )}
+                {project!.webUrl && (
+                  <Button
+                    variant="secondary"
+                    className="bg-gray-800 text-white hover:bg-gray-700"
+                    asChild
+                  >
+                    <a
+                      href={project!.webUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Globe className="mr-2 h-4 w-4" />
+                      Website
+                    </a>
+                  </Button>
+                )}
+              </div>
+              <Button
+                variant="secondary"
+                className="w-full bg-gray-800 text-white hover:bg-gray-700"
+                asChild
+              >
+                <Link href={`/projects/${projectId}/commits`}>
+                  <History className="mr-2 h-4 w-4" />
+                  View Commit History
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="mt-8 md:mt-0 md:w-2/3 md:pl-8">
+          <Card className="border-gray-800 bg-black">
+            <CardContent className="p-6">
+              <div className="mb-6 flex items-center justify-between">
+                <Button
+                  variant="secondary"
+                  className="bg-gray-800 text-white hover:bg-gray-700"
+                  asChild
+                >
+                  <Link href={fromHome ? '/' : '/projects'}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    {fromHome ? 'Return to Home' : 'Return to All Projects'}
+                  </Link>
+                </Button>
+                {fromHome && (
+                  <Button
+                    variant="secondary"
+                    className="bg-gray-800 text-white hover:bg-gray-700"
+                    asChild
+                  >
+                    <Link href="/projects">View All Projects</Link>
+                  </Button>
+                )}
+              </div>
+              <div className="border-t-2 border-gray-800"></div>
+              <div
+                dangerouslySetInnerHTML={{ __html: readme }}
+                className="prose prose-invert max-w-none pt-6"
+              ></div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

@@ -1,19 +1,5 @@
 [
   {
-    "id": "betterqr",
-    "title": "BetterQR",
-    "description": "The best QR managing service with various features, all for free.",
-    "imgSrc": "/images/project-betterqr.svg",
-    "tags": ["python", "flask", "tailwind css"],
-    "githubUrl": "https://github.com/Lagden-Development/betterqr",
-    "webUrl": "https://betterqr.app",
-    "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/betterqr/main/README.md",
-
-    "featured": true,
-
-    "statusId": 2493182
-  },
-  {
     "id": "rickbot",
     "title": "RickBot",
     "description": "An advanced framework for quickly creating Discord bots with discord.py.",
@@ -57,6 +43,8 @@
     "tags": ["python", "discord.py", "discord"],
     "githubUrl": "https://github.com/Lagden-Development/discord-timestamps",
     "webUrl": null,
-    "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/discord-timestamps/main/README.md"
+    "readmeUrl": "https://raw.githubusercontent.com/Lagden-Development/discord-timestamps/main/README.md",
+
+    "featured": true
   }
 ]

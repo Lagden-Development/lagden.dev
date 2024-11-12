@@ -4,9 +4,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import LoadingSpinner from '../../../components/LoadingSpinner';
-import CommitModal from '../../../components/CommitModal';
-import projects from '../../../../public/projects.json';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, GitCommit, ExternalLink } from 'lucide-react';
+import CommitModal from '@/components/CommitModal';
+import projects from '@/../public/projects.json';
 
 type Commit = {
   sha: string;
@@ -35,28 +37,16 @@ const CommitsPage = () => {
   const [repo, setRepo] = useState<string>('');
 
   useEffect(() => {
-    console.log('useEffect called');
-
-    if (!projectId) {
-      console.log('No projectId');
-      return;
-    }
-
-    console.log('Params:', params);
-    console.log('Project ID:', projectId);
+    if (!projectId) return;
 
     const project = projects.find((project) => project.id === projectId);
     if (!project) {
-      console.log('Project not found for ID:', projectId);
       setError('Invalid project ID');
       setIsLoading(false);
       return;
     }
 
-    console.log('Project found:', project);
-
     const projectName = project.title;
-    console.log('Project name:', projectName);
     setProjectName(projectName);
 
     const repoUrl = project.githubUrl;
@@ -73,19 +63,14 @@ const CommitsPage = () => {
     setOwner(fetchedOwner);
     setRepo(fetchedRepo);
 
-    console.log('Owner:', fetchedOwner);
-    console.log('Repo:', fetchedRepo);
-
     const fetchCommits = async () => {
       try {
-        console.log('Fetching commits for', fetchedOwner, fetchedRepo);
         const response = await axios.get<Commit[]>('/api/get-commits', {
           params: {
             owner: fetchedOwner,
             repo: fetchedRepo,
           },
         });
-        console.log('Commits fetched:', response.data);
         setCommits(response.data);
         setIsLoading(false);
       } catch (err) {
@@ -95,7 +80,7 @@ const CommitsPage = () => {
     };
 
     fetchCommits();
-  }, [projectId, params]); // Added `params` to the dependency array
+  }, [projectId, params]);
 
   const handleCommitClick = (commit: Commit) => {
     setSelectedCommit(commit);
@@ -106,68 +91,112 @@ const CommitsPage = () => {
   };
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black p-4">
+        <Card className="border-gray-800 bg-black">
+          <CardContent className="p-6">
+            <p className="text-xl text-red-400">Error: {error}</p>
+            <Button
+              variant="secondary"
+              className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
+              asChild
+            >
+              <Link href={`/projects/${projectId}`}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Return to Project
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="w-full max-w-4xl px-4 text-center">
-        <section className="mb-8">
-          <h1 className="mb-4 text-4xl font-bold">Commit Updates</h1>
-          <p className="text-lg">
-            Latest commits to the {projectName} repository.
-          </p>
-          <Link href={`/projects/${projectId}`}>
-            <p className="mt-4 cursor-pointer text-gray-400 hover:underline">
-              Go back to {projectName}
+    <div className="min-h-screen bg-black py-12">
+      <div className="mx-auto max-w-4xl px-4">
+        <Card className="border-gray-800 bg-black">
+          <CardHeader className="text-center">
+            <CardTitle className="text-4xl font-bold text-white">
+              Commit Updates
+            </CardTitle>
+            <p className="mt-2 text-lg text-gray-300">
+              Latest commits to the {projectName} repository.
             </p>
-          </Link>
-        </section>
+            <Button
+              variant="secondary"
+              className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
+              asChild
+            >
+              <Link href={`/projects/${projectId}`}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Return to {projectName}
+              </Link>
+            </Button>
+          </CardHeader>
 
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <section className="mb-8">
-            <div className="grid grid-cols-1 gap-6">
-              {commits.map((commit) => (
-                <div
-                  key={commit.sha}
-                  className="cursor-pointer rounded-lg border border-gray-700 p-4 hover:bg-gray-800"
-                  onClick={() => handleCommitClick(commit)}
-                >
-                  <p className="text-xl font-bold">
-                    {commit.commit.message.length > 50
-                      ? `${commit.commit.message.substring(0, 50)}...`
-                      : commit.commit.message}
-                  </p>
-                  <p className="text-gray-400">
-                    <Link
-                      href={`https://github.com/${owner}/${repo}/commit/${commit.sha}`}
-                      target="_blank"
-                      className="underline"
-                    >
-                      {commit.sha.substring(0, 7)}
-                    </Link>
-                    {' - '}
-                    {commit.author ? (
-                      <a
-                        href={commit.author.html_url}
-                        target="_blank"
-                        className="underline"
-                      >
-                        {commit.commit.author.name}
-                      </a>
-                    ) : (
-                      <span>{commit.commit.author.name}</span>
-                    )}
-                    {' - '}
-                    {new Date(commit.commit.author.date).toLocaleString()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+          <CardContent className="p-6">
+            {isLoading ? (
+              <div className="flex h-64 items-center justify-center">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent" />
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {commits.map((commit) => (
+                  <Card
+                    key={commit.sha}
+                    className="cursor-pointer border-gray-800 bg-black transition-colors hover:bg-gray-800"
+                    onClick={() => handleCommitClick(commit)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <GitCommit className="mt-1 h-5 w-5 flex-shrink-0 text-gray-400" />
+                        <div className="flex-grow text-left">
+                          <p className="text-xl font-bold text-white">
+                            {commit.commit.message.length > 50
+                              ? `${commit.commit.message.substring(0, 50)}...`
+                              : commit.commit.message}
+                          </p>
+                          <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-400">
+                            <Link
+                              href={`https://github.com/${owner}/${repo}/commit/${commit.sha}`}
+                              target="_blank"
+                              className="flex items-center hover:text-gray-300"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {commit.sha.substring(0, 7)}
+                              <ExternalLink className="ml-1 h-3 w-3" />
+                            </Link>
+                            <span>by</span>
+                            {commit.author ? (
+                              <a
+                                href={commit.author.html_url}
+                                target="_blank"
+                                className="hover:text-gray-300"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {commit.commit.author.name}
+                                <ExternalLink className="ml-1 inline h-3 w-3" />
+                              </a>
+                            ) : (
+                              <span>{commit.commit.author.name}</span>
+                            )}
+                            <span>•</span>
+                            <span>
+                              {new Date(
+                                commit.commit.author.date
+                              ).toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {selectedCommit && (
           <CommitModal

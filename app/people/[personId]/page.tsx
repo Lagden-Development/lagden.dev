@@ -1,4 +1,3 @@
-// app/people/[personId]/page.tsx
 'use client';
 
 import React from 'react';
@@ -8,6 +7,17 @@ import Link from 'next/link';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import { usePathname } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  Github,
+  Globe,
+  Linkedin,
+  MapPin,
+  User2,
+  ArrowLeft,
+  Briefcase,
+} from 'lucide-react';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import PersonNotFound from '../../components/PersonNotFound';
 
@@ -70,7 +80,11 @@ export default function Person() {
   }, [personId]);
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex h-screen items-center justify-center bg-black">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   if (isNotFound) {
@@ -78,80 +92,132 @@ export default function Person() {
   }
 
   return (
-    <div className="flex justify-center py-8">
-      <div className="flex w-full max-w-6xl flex-col px-4 md:flex-row">
+    <div className="min-h-screen bg-black py-12">
+      <div className="mx-auto flex max-w-6xl flex-col px-4 text-white md:flex-row">
         <div className="md:w-1/3 md:pr-8">
-          <Image
-            src={person!.imgSrc}
-            alt={person!.name}
-            width={400}
-            height={400}
-            className="mb-4 rounded object-cover"
-          />
-          <h1 className="mb-2 text-4xl font-bold">{person!.name}</h1>
-          <p className="mb-2 text-lg">{person!.role}</p>
-          <p className="mb-4 text-gray-500">
-            {person!.location} <span className="mx-2">|</span>{' '}
-            {person!.pronouns}
-          </p>
-          <div className="mb-4">
-            {person!.skills.map((skill, index) => (
-              <span
-                key={index}
-                className="mb-2 mr-2 inline-block rounded bg-gray-200 px-2 py-1 text-xs text-gray-800"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-          <div className="mb-4 flex space-x-4">
-            {person!.githubUrl && (
-              <a
-                href={person!.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-nobel hover:text-white"
-              >
-                <i className="fab fa-github fa-2x"></i>
-              </a>
-            )}
-            {person!.linkedinUrl && (
-              <a
-                href={person!.linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-nobel hover:text-white"
-              >
-                <i className="fab fa-linkedin fa-2x"></i>
-              </a>
-            )}
-            {person!.webUrl && (
-              <a
-                href={person!.webUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-nobel hover:text-white"
-              >
-                <i className="fas fa-globe fa-2x"></i>
-              </a>
-            )}
-          </div>
+          <Card className="border-gray-800 bg-black">
+            <CardContent className="p-6">
+              <Image
+                src={person!.imgSrc}
+                alt={person!.name}
+                width={400}
+                height={400}
+                className="mb-6 rounded-lg object-cover"
+                priority
+              />
+              <h1 className="mb-2 text-4xl font-bold text-white">
+                {person!.name}
+              </h1>
+
+              <div className="mb-4 space-y-2">
+                <div className="flex items-center gap-2 text-gray-300">
+                  <Briefcase className="h-4 w-4" />
+                  {person!.role}
+                </div>
+                <div className="flex items-center gap-2 text-gray-300">
+                  <MapPin className="h-4 w-4" />
+                  {person!.location}
+                </div>
+                <div className="flex items-center gap-2 text-gray-300">
+                  <User2 className="h-4 w-4" />
+                  {person!.pronouns}
+                </div>
+              </div>
+
+              <div className="mb-6 flex flex-wrap gap-2">
+                {person!.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="inline-block rounded bg-gray-800 px-3 py-1 text-sm text-white transition-colors hover:bg-gray-700"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {person!.githubUrl && (
+                  <Button
+                    variant="secondary"
+                    className="flex-auto bg-gray-800 text-white hover:bg-gray-700"
+                    asChild
+                  >
+                    <a
+                      href={person!.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Github className="mr-2 h-4 w-4" />
+                      GitHub
+                    </a>
+                  </Button>
+                )}
+                {person!.linkedinUrl && (
+                  <Button
+                    variant="secondary"
+                    className="flex-auto bg-gray-800 text-white hover:bg-gray-700"
+                    asChild
+                  >
+                    <a
+                      href={person!.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Linkedin className="mr-2 h-4 w-4" />
+                      LinkedIn
+                    </a>
+                  </Button>
+                )}
+                {person!.webUrl && (
+                  <Button
+                    variant="secondary"
+                    className="flex-auto bg-gray-800 text-white hover:bg-gray-700"
+                    asChild
+                  >
+                    <a
+                      href={person!.webUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Globe className="mr-2 h-4 w-4" />
+                      Website
+                    </a>
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <div className="md:w-2/3 md:pl-8">
-          <Link href="/people">
-            <p className="mb-4 inline-block text-blue-500 hover:underline">
-              &larr; Back to All People
-            </p>
-          </Link>
-          <hr className="mb-4 border-t-2 border-gray-800" />
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <div
-              dangerouslySetInnerHTML={{ __html: bio }}
-              className="prose"
-            ></div>
-          )}
+
+        <div className="mt-8 md:mt-0 md:w-2/3 md:pl-8">
+          <Card className="border-gray-800 bg-black">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <Button
+                  variant="secondary"
+                  className="bg-gray-800 text-white hover:bg-gray-700"
+                  asChild
+                >
+                  <Link href="/people">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to All People
+                  </Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="border-t-2 border-gray-800"></div>
+              {isLoading ? (
+                <div className="py-8">
+                  <LoadingSpinner />
+                </div>
+              ) : (
+                <div
+                  dangerouslySetInnerHTML={{ __html: bio }}
+                  className="prose prose-invert max-w-none pt-6"
+                ></div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

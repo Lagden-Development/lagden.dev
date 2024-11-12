@@ -3,35 +3,41 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import {
+  Home,
+  FolderGit2,
+  Users,
+  Bell,
+  Menu,
+  Github,
+  ChevronRight,
+} from 'lucide-react';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Utility function to determine active link for desktop
   const getDesktopLinkClass = (path: string) => {
-    const baseClasses =
-      'mx-2 rounded-lg transition duration-200 ease-in px-3 py-1';
-    const activeClasses = 'bg-gray-500 bg-opacity-50 text-white';
-    const inactiveClasses =
-      'text-nobel hover:bg-gray-500 hover:bg-opacity-50 hover:text-white';
-
-    return pathname === path
-      ? `${baseClasses} ${activeClasses}`
-      : `${baseClasses} ${inactiveClasses}`;
+    const isActive = pathname === path;
+    return {
+      base: 'inline-flex items-center gap-2 px-3 py-2 rounded-md transition-colors',
+      state: isActive
+        ? 'bg-gray-800 text-white'
+        : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+    };
   };
 
-  // Utility function to determine active link for mobile
   const getMobileLinkClass = (path: string) => {
-    const baseClasses =
-      'block w-full px-4 py-2 rounded-lg transition duration-200 ease-in';
-    const activeClasses = 'bg-gray-700 text-white';
-    const inactiveClasses = 'text-nobel hover:bg-gray-700 hover:text-white';
-
-    return pathname === path
-      ? `${baseClasses} ${activeClasses}`
-      : `${baseClasses} ${inactiveClasses}`;
+    const isActive = pathname === path;
+    return {
+      base: 'flex items-center gap-2 w-full px-3 py-2 rounded-md transition-colors',
+      state: isActive
+        ? 'bg-gray-800 text-white'
+        : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+    };
   };
 
   const toggleMenu = () => {
@@ -59,87 +65,118 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     };
   }, [isMenuOpen, handleClickOutside]);
 
+  const navigationLinks = [
+    { path: '/', label: 'Home', icon: <Home className="h-4 w-4" /> },
+    {
+      path: '/projects',
+      label: 'Projects',
+      icon: <FolderGit2 className="h-4 w-4" />,
+    },
+    { path: '/people', label: 'People', icon: <Users className="h-4 w-4" /> },
+    { path: '/updates', label: 'Updates', icon: <Bell className="h-4 w-4" /> },
+  ];
+
   return (
     <div className="flex min-h-screen flex-col bg-black text-white">
-      <nav className="fixed left-0 right-0 top-0 z-10 flex items-center justify-between border-b border-gray-800 bg-black p-4">
-        <div className="flex items-center">
-          <Link href="/">
-            <span className="text-xl font-bold text-white">lagden.dev</span>
-          </Link>
-          {/* Desktop Links */}
-          <div className="hidden md:flex">
-            <Link href="/" className={getDesktopLinkClass('/')}>
-              Home
-            </Link>
-            <Link href="/projects" className={getDesktopLinkClass('/projects')}>
-              Projects
-            </Link>
-            <Link href="/people" className={getDesktopLinkClass('/people')}>
-              People
-            </Link>
-          </div>
-        </div>
-        <div className="relative flex items-center">
-          {/* Desktop Link for Updates */}
-          <div className="hidden md:flex">
-            <Link href="/updates" className={getDesktopLinkClass('/updates')}>
-              Updates
-            </Link>
-          </div>
-          {/* Burger Menu for Mobile */}
-          <button
-            className="ml-4 text-2xl text-white focus:outline-none md:hidden"
-            onClick={toggleMenu}
-          >
-            <i className="fas fa-bars"></i>
-          </button>
-          {isMenuOpen && (
-            <div
-              ref={menuRef}
-              className="absolute right-0 top-full z-20 mt-2 w-48 rounded-lg border border-gray-600 bg-black py-2 shadow-lg"
-            >
-              <Link
-                href="/"
-                className={getMobileLinkClass('/')}
-                onClick={closeMenu}
-              >
-                Home
+      <nav className="fixed left-0 right-0 top-0 z-10 border-b border-gray-800 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/75">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center">
+              <Link href="/" className="mr-4 flex items-center space-x-2">
+                <span className="text-xl font-bold text-white">lagden.dev</span>
               </Link>
-              <Link
-                href="/projects"
-                className={getMobileLinkClass('/projects')}
-                onClick={closeMenu}
-              >
-                Projects
-              </Link>
-              <Link
-                href="/people"
-                className={getMobileLinkClass('/people')}
-                onClick={closeMenu}
-              >
-                People
-              </Link>
-              <Link
-                href="/updates"
-                className={getMobileLinkClass('/updates')}
-                onClick={closeMenu}
-              >
-                Updates
-              </Link>
+
+              {/* Desktop Navigation */}
+              <div className="hidden space-x-1 md:flex">
+                {navigationLinks.slice(0, 3).map(({ path, label, icon }) => {
+                  const { base, state } = getDesktopLinkClass(path);
+                  return (
+                    <Link key={path} href={path} className={`${base} ${state}`}>
+                      {icon}
+                      {label}
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-          )}
+
+            <div className="flex items-center space-x-2">
+              {/* Desktop Updates Link */}
+              <div className="hidden md:flex">
+                {(() => {
+                  const { base, state } = getDesktopLinkClass('/updates');
+                  return (
+                    <Link href="/updates" className={`${base} ${state}`}>
+                      <Bell className="h-4 w-4" />
+                      Updates
+                    </Link>
+                  );
+                })()}
+              </div>
+
+              {/* Mobile Menu Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={toggleMenu}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+
+              {/* Mobile Menu */}
+              {isMenuOpen && (
+                <Card
+                  ref={menuRef}
+                  className="absolute right-2 top-full mt-2 w-56 border-gray-800 bg-black"
+                >
+                  <div className="p-2">
+                    {navigationLinks.map(({ path, label, icon }) => {
+                      const { base, state } = getMobileLinkClass(path);
+                      return (
+                        <Link
+                          key={path}
+                          href={path}
+                          className={`${base} ${state}`}
+                          onClick={closeMenu}
+                        >
+                          {icon}
+                          <span className="flex-1">{label}</span>
+                          <ChevronRight className="h-4 w-4 opacity-50" />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </Card>
+              )}
+            </div>
+          </div>
         </div>
       </nav>
-      <main className="mt-16 flex-grow p-4">{children}</main>
-      <footer className="border-t border-gray-800 p-4 text-center">
-        © 2024 Lagden Development.{' '}
-        <a
-          href="https://github.com/Lagden-Development/lagden.dev"
-          className="text-white underline"
-          target="_blank"
-        >
-          GitHub
-        </a>
+
+      <main className="mt-16 flex-grow px-4 py-8">{children}</main>
+
+      <footer className="border-t border-gray-800 bg-black px-4 py-6">
+        <div className="mx-auto max-w-7xl text-center">
+          <p className="text-sm text-gray-400">
+            © 2024 Lagden Development
+            <Button
+              variant="link"
+              className="ml-2 h-auto p-0 text-white"
+              asChild
+            >
+              <a
+                href="https://github.com/Lagden-Development/lagden.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center hover:text-gray-300"
+              >
+                <Github className="mr-1 h-4 w-4" />
+                GitHub
+              </a>
+            </Button>
+          </p>
+        </div>
       </footer>
     </div>
   );

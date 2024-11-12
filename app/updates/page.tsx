@@ -3,6 +3,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  GitCommit,
+  ArrowLeft,
+  ExternalLink,
+  User,
+  Clock,
+  ChevronRight,
+} from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 import CommitModal from '../components/CommitModal';
 
@@ -56,65 +66,121 @@ export default function Updates() {
   };
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black p-4">
+        <Card className="border-gray-800 bg-black">
+          <CardContent className="p-6">
+            <p className="text-xl text-red-400">Error: {error}</p>
+            <Button
+              variant="secondary"
+              className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
+              asChild
+            >
+              <Link href="/">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Return to Home
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="w-full max-w-4xl px-4 text-center">
-        <section className="mb-8">
-          <h1 className="mb-4 text-4xl font-bold">Website Updates</h1>
-          <p className="text-lg">
-            Here are the latest commits to the Lagden Development website
-            repository.
-          </p>
-          <Link href="/" passHref>
-            <p className="mt-4 cursor-pointer text-gray-400 hover:underline">
-              Go back to Home
+    <div className="min-h-screen bg-black py-12">
+      <div className="mx-auto max-w-4xl px-4">
+        <Card className="border-gray-800 bg-black">
+          <CardHeader className="text-center">
+            <CardTitle className="text-4xl font-bold text-white">
+              Website Updates
+            </CardTitle>
+            <p className="mt-2 text-lg text-gray-300">
+              Here are the latest commits to the Lagden Development website
+              repository.
             </p>
-          </Link>
-        </section>
+            <Button
+              variant="secondary"
+              className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
+              asChild
+            >
+              <Link href="/">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Return to Home
+              </Link>
+            </Button>
+          </CardHeader>
 
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <section className="mb-8">
-            <div className="grid grid-cols-1 gap-6">
-              {commits.map((commit) => (
-                <div
-                  key={commit.sha}
-                  className="cursor-pointer rounded-lg border border-gray-700 p-4 hover:bg-gray-800"
-                  onClick={() => handleCommitClick(commit)}
-                >
-                  <p className="text-xl font-bold">
-                    {commit.commit.message.length > 50
-                      ? `${commit.commit.message.substring(0, 50)}...`
-                      : commit.commit.message}
-                  </p>
-                  <p className="text-gray-400">
-                    <Link
-                      href={`https://github.com/Lagden-Development/lagden.dev/commit/${commit.sha}`}
-                      target="_blank"
-                      className="underline"
-                    >
-                      {commit.sha.substring(0, 7)}
-                    </Link>
-                    {' - '}
-                    <a
-                      href={commit.author.html_url}
-                      target="_blank"
-                      className="underline"
-                    >
-                      {commit.commit.author.name}
-                    </a>
-                    {' - '}
-                    {new Date(commit.commit.author.date).toLocaleString()}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+          <CardContent className="p-6">
+            {isLoading ? (
+              <div className="flex h-64 items-center justify-center">
+                <LoadingSpinner />
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {commits.map((commit) => (
+                  <Card
+                    key={commit.sha}
+                    className="cursor-pointer border-gray-800 bg-black transition-colors hover:bg-gray-800"
+                    onClick={() => handleCommitClick(commit)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <GitCommit className="mt-1 h-5 w-5 flex-shrink-0 text-gray-400" />
+                        <div className="flex-grow">
+                          <div className="flex items-center justify-between">
+                            <p className="text-xl font-bold text-white">
+                              {commit.commit.message.length > 50
+                                ? `${commit.commit.message.substring(0, 50)}...`
+                                : commit.commit.message}
+                            </p>
+                            <ChevronRight className="h-5 w-5 text-gray-400" />
+                          </div>
+
+                          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-400">
+                            <Link
+                              href={`https://github.com/Lagden-Development/lagden.dev/commit/${commit.sha}`}
+                              target="_blank"
+                              className="flex items-center hover:text-gray-300"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <code className="font-mono">
+                                {commit.sha.substring(0, 7)}
+                              </code>
+                              <ExternalLink className="ml-1 h-3 w-3" />
+                            </Link>
+
+                            <div className="flex items-center gap-1">
+                              <User className="h-4 w-4" />
+                              <a
+                                href={commit.author.html_url}
+                                target="_blank"
+                                className="hover:text-gray-300"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {commit.commit.author.name}
+                                <ExternalLink className="ml-1 inline h-3 w-3" />
+                              </a>
+                            </div>
+
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-4 w-4" />
+                              <span>
+                                {new Date(
+                                  commit.commit.author.date
+                                ).toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {selectedCommit && (
           <CommitModal

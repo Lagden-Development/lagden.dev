@@ -1,11 +1,10 @@
-// app/people/page.tsx
 'use client';
 
 import React from 'react';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import LoadingSpinner from '../components/LoadingSpinner';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface Person {
   id: string;
@@ -32,22 +31,25 @@ export default function People() {
   }, []);
 
   const PersonCard = ({ person }: { person: Person }) => (
-    <Link href={`/people/${person.id}`} passHref>
-      <div className="flex h-full cursor-pointer flex-col justify-between rounded-lg border border-gray-700 p-4 hover:bg-gray-800">
-        <div>
-          <div className="mb-4 flex h-40 w-full items-center justify-center">
+    <Link
+      href={`/people/${person.id}`}
+      className="transition-transform duration-200 hover:scale-105"
+    >
+      <Card className="h-full border-gray-800 bg-black">
+        <CardContent className="p-6">
+          <div className="mb-4 flex h-40 items-center justify-center">
             <Image
               src={person.imgSrc}
               alt={person.name}
               width={160}
               height={160}
-              className="rounded object-cover"
+              className="rounded object-contain transition-opacity duration-200 hover:opacity-90"
             />
           </div>
-          <h2 className="mb-2 text-2xl font-bold">{person.name}</h2>
-          <p className="text-gray-400">{person.role}</p>
-        </div>
-      </div>
+          <h2 className="mb-2 text-2xl font-bold text-white">{person.name}</h2>
+          <p className="text-gray-300">{person.role}</p>
+        </CardContent>
+      </Card>
     </Link>
   );
 
@@ -57,17 +59,21 @@ export default function People() {
       : 'sm:grid-cols-2 lg:grid-cols-3';
 
   return (
-    <div className="flex justify-center">
-      <div className="w-full max-w-4xl px-4 text-center">
-        <section className="mb-8">
-          <h1 className="mb-4 text-4xl font-bold">Our Team</h1>
-          <p className="text-lg">
+    <div className="min-h-screen bg-black">
+      <div className="mx-auto max-w-4xl px-4 py-12">
+        <section className="mb-12 space-y-4 text-center">
+          <h1 className="text-5xl font-bold tracking-tight text-white">
+            Our Team
+          </h1>
+          <p className="text-xl text-white">
             Meet the dedicated professionals who make our organization great.
           </p>
         </section>
 
         {isLoading ? (
-          <LoadingSpinner />
+          <div className="flex h-64 items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent" />
+          </div>
         ) : (
           <div className={`grid grid-cols-1 ${gridColsClass} gap-6`}>
             {people.map((person) => (
