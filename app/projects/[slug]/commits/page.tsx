@@ -8,7 +8,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, GitCommit, ExternalLink } from 'lucide-react';
 import CommitModal from '@/components/CommitModal';
-import projects from '@/../public/projects.json';
+
+interface Project {
+  title: string;
+  slug: string;
+  description: string;
+  tags: string[];
+  github_repo_url: string;
+  website_url: string;
+  project_readme: Record<string, any>;
+  picture_url: string;
+  better_stack_status_id: string;
+  is_featured: boolean;
+}
 
 type Commit = {
   sha: string;
@@ -27,60 +39,74 @@ type Commit = {
 
 const CommitsPage = () => {
   const params = useParams();
-  const projectId = params?.projectId;
+  const slug = params?.slug as string;
   const [commits, setCommits] = useState<Commit[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCommit, setSelectedCommit] = useState<Commit | null>(null);
-  const [projectName, setProjectName] = useState<string>('');
+  const [project, setProject] = useState<Project | null>(null);
   const [owner, setOwner] = useState<string>('');
   const [repo, setRepo] = useState<string>('');
 
   useEffect(() => {
-    if (!projectId) return;
+    if (!slug) return;
 
-    const project = projects.find((project) => project.id === projectId);
-    if (!project) {
-      setError('Invalid project ID');
-      setIsLoading(false);
-      return;
-    }
-
-    const projectName = project.title;
-    setProjectName(projectName);
-
-    const repoUrl = project.githubUrl;
-    const repoNameMatch = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
-    if (!repoNameMatch) {
-      setError('Invalid GitHub URL');
-      setIsLoading(false);
-      return;
-    }
-
-    const fetchedOwner = repoNameMatch[1];
-    const fetchedRepo = repoNameMatch[2];
-
-    setOwner(fetchedOwner);
-    setRepo(fetchedRepo);
-
-    const fetchCommits = async () => {
+    const fetchProject = async () => {
       try {
-        const response = await axios.get<Commit[]>('/api/get-commits', {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await fetch(`${baseUrl}/ldev-cms/projects`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+
+        const projects: Project[] = await response.json();
+        const foundProject = projects.find((p) => p.slug === slug);
+
+        if (!foundProject) {
+          throw new Error('Project not found');
+        }
+
+        setProject(foundProject);
+
+        // Parse GitHub URL
+        const repoUrl = foundProject.github_repo_url;
+        if (!repoUrl) {
+          setError('No GitHub repository URL found');
+          setIsLoading(false);
+          return;
+        }
+
+        const repoNameMatch = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+        if (!repoNameMatch) {
+          setError('Invalid GitHub URL');
+          setIsLoading(false);
+          return;
+        }
+
+        const fetchedOwner = repoNameMatch[1];
+        const fetchedRepo = repoNameMatch[2].replace('.git', '');
+
+        setOwner(fetchedOwner);
+        setRepo(fetchedRepo);
+
+        // Fetch commits
+        const commitsResponse = await axios.get('/api/get-commits', {
           params: {
             owner: fetchedOwner,
             repo: fetchedRepo,
           },
         });
-        setCommits(response.data);
+
+        setCommits(commitsResponse.data);
         setIsLoading(false);
       } catch (err) {
-        setError((err as Error).message);
+        setError(err instanceof Error ? err.message : 'An error occurred');
         setIsLoading(false);
       }
     };
 
-    fetchCommits();
-  }, [projectId, params]);
+    fetchProject();
+  }, [slug]);
 
   const handleCommitClick = (commit: Commit) => {
     setSelectedCommit(commit);
@@ -101,13 +127,21 @@ const CommitsPage = () => {
               className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
               asChild
             >
-              <Link href={`/projects/${projectId}`}>
+              <Link href={`/projects/${slug}`}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Return to Project
               </Link>
             </Button>
           </CardContent>
         </Card>
+      </div>
+    );
+  }
+
+  if (!project) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-black">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent" />
       </div>
     );
   }
@@ -121,16 +155,16 @@ const CommitsPage = () => {
               Commit Updates
             </CardTitle>
             <p className="mt-2 text-lg text-gray-300">
-              Latest commits to the {projectName} repository.
+              Latest commits to the {project.title} repository.
             </p>
             <Button
               variant="secondary"
               className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
               asChild
             >
-              <Link href={`/projects/${projectId}`}>
+              <Link href={`/projects/${project.slug}`}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Return to {projectName}
+                Return to {project.title}
               </Link>
             </Button>
           </CardHeader>

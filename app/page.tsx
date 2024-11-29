@@ -8,29 +8,52 @@ import { Button } from '@/components/ui/button';
 import { GithubIcon, Mail } from 'lucide-react';
 
 interface Project {
-  id: string;
   title: string;
+  slug: string;
   description: string;
-  imgSrc: string;
-  featured: boolean;
+  tags: string[];
+  github_repo_url: string;
+  website_url: string;
+  project_readme: Record<string, any>;
+  picture_url: string;
+  better_stack_status_id: string;
+  is_featured: boolean;
 }
+
+// Helper function to ensure image URLs have https protocol
+const ensureHttps = (url: string) => {
+  if (url.startsWith('//')) {
+    return `https:${url}`;
+  }
+  if (!url.startsWith('http')) {
+    return `https://${url}`;
+  }
+  return url;
+};
 
 export default function Home() {
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch('/projects.json')
-      .then((res) => res.json())
-      .then((projects: Project[]) => {
-        const featured = projects.filter((project) => project.featured);
+    const fetchProjects = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await fetch(`${baseUrl}/ldev-cms/projects`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+        const projects: Project[] = await response.json();
+        const featured = projects.filter((project) => project.is_featured);
         setFeaturedProjects(featured);
         setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error loading projects: ', err);
+      } catch (error) {
+        console.error('Error loading projects:', error);
         setIsLoading(false);
-      });
+      }
+    };
+
+    fetchProjects();
   }, []);
 
   return (
@@ -77,15 +100,15 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {featuredProjects.map((project) => (
                 <Link
-                  key={project.id}
-                  href={`/projects/${project.id}?from=home`}
+                  key={project.slug}
+                  href={`/projects/${project.slug}?from=home`}
                   className="transition-transform duration-200 hover:scale-105"
                 >
                   <Card className="h-full border-gray-800 bg-black">
                     <CardContent className="p-6">
                       <div className="mb-4 flex h-40 items-center justify-center">
                         <Image
-                          src={project.imgSrc}
+                          src={ensureHttps(project.picture_url)}
                           alt={project.title}
                           width={160}
                           height={160}
@@ -96,6 +119,18 @@ export default function Home() {
                         {project.title}
                       </h3>
                       <p className="text-gray-300">{project.description}</p>
+                      {project.tags.length > 0 && (
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {project.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full bg-gray-800 px-3 py-1 text-sm text-gray-300"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </Link>
