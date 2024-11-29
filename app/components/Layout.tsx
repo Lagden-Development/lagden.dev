@@ -13,6 +13,8 @@ import {
   Menu,
   Github,
   ChevronRight,
+  Mail,
+  FileJson,
 } from 'lucide-react';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -74,6 +76,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     },
     { path: '/people', label: 'People', icon: <Users className="h-4 w-4" /> },
     { path: '/updates', label: 'Updates', icon: <Bell className="h-4 w-4" /> },
+  ];
+
+  const Footerlinks = [
+    {
+      href: 'mailto:hello@lagden.dev',
+      icon: <Mail className="h-4 w-4" />,
+      label: 'hello@lagden.dev',
+    },
+    {
+      href: 'https://github.com/Lagden-Development/lagden.dev',
+      icon: <Github className="h-4 w-4" />,
+      label: 'GitHub',
+      external: true,
+    },
+    {
+      href: 'https://docs.api.lagden.dev',
+      icon: <FileJson className="h-4 w-4" />,
+      label: 'API Docs',
+      external: true,
+    },
   ];
 
   return (
@@ -156,26 +178,36 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <main className="mt-16 flex-grow px-4 py-8">{children}</main>
 
-      <footer className="border-t border-gray-800 bg-black px-4 py-6">
-        <div className="mx-auto max-w-7xl text-center">
-          <p className="text-sm text-gray-400">
-            © 2024 Lagden Development
-            <Button
-              variant="link"
-              className="ml-2 h-auto p-0 text-white"
-              asChild
-            >
-              <a
-                href="https://github.com/Lagden-Development/lagden.dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center hover:text-gray-300"
-              >
-                <Github className="mr-1 h-4 w-4" />
-                GitHub
-              </a>
-            </Button>
-          </p>
+      <footer className="border-t border-gray-800 bg-black px-4 py-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
+            <div className="flex flex-col items-center md:items-start">
+              <p className="text-sm text-gray-400">
+                © 2024 Lagden Development
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-6">
+              {Footerlinks.map((link) => (
+                <Button
+                  key={link.label}
+                  variant="link"
+                  className="h-auto p-0 text-gray-400 hover:text-white"
+                  asChild
+                >
+                  <a
+                    href={link.href}
+                    target={link.external ? '_blank' : undefined}
+                    rel={link.external ? 'noopener noreferrer' : undefined}
+                    className="inline-flex items-center"
+                  >
+                    {link.icon}
+                    <span className="ml-2">{link.label}</span>
+                  </a>
+                </Button>
+              ))}
+            </div>
+          </div>
         </div>
       </footer>
     </div>
