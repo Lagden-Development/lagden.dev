@@ -1,5 +1,6 @@
 import React from 'react';
-import Layout from './components/Layout';
+import Navigation from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
@@ -115,7 +116,18 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <GoogleAnalytics gaId="G-JHDS9FXCK2" />
-        <Layout>{children}</Layout>
+
+        <div className="relative min-h-screen bg-black text-white">
+          {/* Fixed grid background */}
+          <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808025_1px,transparent_1px),linear-gradient(to_bottom,#80808025_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)]" />
+
+          <Navigation />
+
+          {/* Main Content */}
+          <main className="relative mt-16 flex-grow px-4 py-8">{children}</main>
+
+          <Footer />
+        </div>
       </body>
     </html>
   );
