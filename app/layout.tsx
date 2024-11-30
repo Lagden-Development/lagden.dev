@@ -1,3 +1,4 @@
+// app/layout.tsx
 import React from 'react';
 import Navigation from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';

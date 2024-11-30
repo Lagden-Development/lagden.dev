@@ -1,3 +1,4 @@
+// app/search/tag/[tagName]/page.tsx
 'use client';
 
 import React from 'react';

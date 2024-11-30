@@ -1,3 +1,4 @@
+// app/people/[slug]/page.tsx
 'use client';
 
 import React from 'react';
