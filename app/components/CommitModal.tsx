@@ -50,7 +50,7 @@ const CommitModal: React.FC<CommitModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-      <Card className="modal-content relative w-full max-w-2xl border-gray-800 bg-black">
+      <Card className="modal-content relative w-full max-w-2xl rounded-xl border-gray-800 bg-black">
         <Button
           variant="ghost"
           size="icon"

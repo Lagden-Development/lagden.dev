@@ -2,24 +2,11 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
+import { Person } from '@/types';
 import { ensureHttps } from '@/helpers';
 
-interface Project {
-  title: string;
-  slug: string;
-  description: string;
-  tags: string[];
-  github_repo_url: string;
-  website_url: string;
-  project_readme: Record<string, any>;
-  picture_url: string;
-  better_stack_status_id: string;
-  is_featured: boolean;
-}
-
-interface ProjectsGridProps {
-  featuredOnly?: boolean;
-  filterTags?: string[];
+interface PeopleGridProps {
+  filterSkills?: string[];
   fromPage?: string;
 }
 
@@ -28,7 +15,7 @@ const truncateText = (text: string, maxLength: number) => {
   return text.slice(0, maxLength).trim() + '...';
 };
 
-async function getProjects() {
+async function getPeople() {
   const apiKey = process.env.LAGDEN_DEV_API_KEY;
   const baseUrl = process.env.LAGDEN_DEV_API_BASE_URL;
 
@@ -36,46 +23,44 @@ async function getProjects() {
     throw new Error('Missing required environment variables');
   }
 
-  const response = await fetch(
-    `${baseUrl}/ldev-cms/projects?api_key=${apiKey}`,
-    {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    }
-  );
+  const response = await fetch(`${baseUrl}/ldev-cms/people?api_key=${apiKey}`, {
+    next: { revalidate: 3600 }, // Cache for 1 hour
+  });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch projects');
+    throw new Error('Failed to fetch people');
   }
 
   return response.json();
 }
 
-const ProjectsGrid = async ({
-  featuredOnly = false,
-  filterTags = [],
-  fromPage,
-}: ProjectsGridProps) => {
-  const projects = await getProjects();
+const PeopleGrid = async ({ filterSkills = [], fromPage }: PeopleGridProps) => {
+  const people = await getPeople();
 
-  const filteredProjects = projects.filter((project: Project) => {
-    if (featuredOnly && !project.is_featured) return false;
-    if (filterTags.length > 0) {
-      return filterTags.every((tag) => project.tags.includes(tag));
+  const filteredPeople = people.filter((person: Person) => {
+    if (filterSkills.length > 0) {
+      return filterSkills.every((skill) => person.skills.includes(skill));
     }
     return true;
   });
 
-  const getProjectUrl = (slug: string) => {
-    const baseUrl = `/projects/${slug}`;
+  const getPersonUrl = (slug: string) => {
+    const baseUrl = `/people/${slug}`;
     return fromPage ? `${baseUrl}?from=${fromPage}` : baseUrl;
   };
 
+  // Determine grid classes based on number of people
+  const gridClasses =
+    filteredPeople.length <= 2
+      ? 'grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-2xl mx-auto'
+      : 'grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3';
+
   return (
-    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {filteredProjects.map((project: Project) => (
+    <div className={gridClasses}>
+      {filteredPeople.map((person: Person) => (
         <Link
-          key={project.slug}
-          href={getProjectUrl(project.slug)}
+          key={person.slug}
+          href={getPersonUrl(person.slug)}
           className="group relative"
         >
           <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-violet-500/30 via-fuchsia-500/30 to-indigo-500/30 opacity-0 blur transition-all duration-300 group-hover:opacity-100" />
@@ -85,32 +70,32 @@ const ProjectsGrid = async ({
               <div className="group/image relative mb-4 flex h-44 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-violet-500/5 via-fuchsia-500/5 to-indigo-500/5">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:14px_24px]" />
                 <Image
-                  src={ensureHttps(project.picture_url)}
-                  alt={project.title}
+                  src={ensureHttps(person.picture_url)}
+                  alt={person.name}
                   width={180}
                   height={180}
-                  className="relative z-10 object-contain transition-all duration-500 group-hover/image:scale-110"
+                  className="relative z-10 object-cover transition-all duration-500 group-hover/image:scale-110"
                 />
               </div>
-              <h3 className="mb-2 text-2xl font-bold text-white transition-colors duration-300 group-hover:text-violet-300">
-                {truncateText(project.title, 50)}
+              <h3 className="mb-1 text-2xl font-bold text-white transition-colors duration-300 group-hover:text-violet-300">
+                {truncateText(person.name, 50)}
               </h3>
-              <p className="mb-4 line-clamp-2 flex-grow text-sm text-gray-400">
-                {project.description}
-              </p>
-              {project.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.slice(0, 3).map((tag) => (
+              <p className="mb-2 text-sm text-violet-300">{person.pronouns}</p>
+              <p className="mb-1 text-sm text-gray-400">{person.occupation}</p>
+              <p className="mb-4 text-sm text-gray-400">{person.location}</p>
+              {person.skills.length > 0 && (
+                <div className="mt-auto flex flex-wrap gap-2">
+                  {person.skills.slice(0, 3).map((skill) => (
                     <span
-                      key={tag}
+                      key={skill}
                       className="relative rounded-full border border-violet-500/20 bg-violet-500/5 px-3 py-1 text-xs text-violet-300 transition-all duration-300 hover:border-violet-500/30 hover:bg-violet-500/10"
                     >
-                      {tag}
+                      {skill}
                     </span>
                   ))}
-                  {project.tags.length > 3 && (
+                  {person.skills.length > 3 && (
                     <span className="relative rounded-full border border-violet-500/20 bg-violet-500/5 px-3 py-1 text-xs text-violet-300">
-                      +{project.tags.length - 3}
+                      +{person.skills.length - 3}
                     </span>
                   )}
                 </div>
@@ -126,4 +111,4 @@ const ProjectsGrid = async ({
   );
 };
 
-export default ProjectsGrid;
+export default PeopleGrid;

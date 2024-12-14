@@ -1,0 +1,47 @@
+@keyframes grid-flow {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(24px);
+  }
+}
+
+@keyframes glow-smooth {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-grid-flow {
+  animation: grid-flow 20s linear infinite;
+}
+
+.animate-glow-smooth {
+  animation: glow-smooth 4s ease-in-out infinite;
+}
+
+.animate-glow-slow {
+  animation: glow-smooth 6s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 8s linear infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

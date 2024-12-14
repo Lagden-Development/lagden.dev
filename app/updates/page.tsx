@@ -1,83 +1,55 @@
-// app/updates/page.tsx
-'use client';
-
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// app/projects/[slug]/commits/page.tsx
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  GitCommit,
-  ArrowLeft,
-  ExternalLink,
-  User,
-  Clock,
-  ChevronRight,
-} from 'lucide-react';
-import LoadingSpinner from '../components/LoadingSpinner';
-import CommitModal from '../components/CommitModal';
+import { ArrowLeft } from 'lucide-react';
+import { CommitsList } from '@/components/shared/ui/CommitsList';
+import type { CommitsResponse } from '@/types';
 
-type Commit = {
-  sha: string;
-  commit: {
-    message: string;
-    author: {
-      name: string;
-      date: string;
-    };
-  };
-  author: {
-    login: string;
-    html_url: string;
-  };
-};
+async function getCommits(): Promise<CommitsResponse | null> {
+  try {
+    const baseUrl = process.env.LAGDEN_DEV_API_BASE_URL;
+    const apiKey = process.env.LAGDEN_DEV_API_KEY;
 
-export default function Updates() {
-  const [commits, setCommits] = useState<Commit[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedCommit, setSelectedCommit] = useState<Commit | null>(null);
-
-  useEffect(() => {
-    async function fetchCommits() {
-      try {
-        const response = await axios.get<Commit[]>('/api/get-commits', {
-          params: {
-            owner: 'Lagden-Development',
-            repo: 'lagden.dev',
-          },
-        });
-        setCommits(response.data);
-        setIsLoading(false);
-      } catch (err) {
-        setError((err as Error).message);
-        setIsLoading(false);
+    const response = await fetch(
+      `${baseUrl}/ldev-cms/projects/lagden-dev/commits?api_key=${apiKey}&limit=10`,
+      {
+        next: { revalidate: 60 }, // Revalidate every minute
       }
+    );
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error('Failed to fetch commits');
     }
 
-    fetchCommits();
-  }, []);
+    const data: CommitsResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching commits:', error);
+    return null;
+  }
+}
 
-  const handleCommitClick = (commit: Commit) => {
-    setSelectedCommit(commit);
-  };
+export default async function CommitsPage() {
+  const commitsData = await getCommits();
 
-  const handleCloseModal = () => {
-    setSelectedCommit(null);
-  };
-
-  if (error) {
+  if (!commitsData) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black p-4">
+      <div className="flex min-h-screen items-center justify-center p-4">
         <Card className="border-gray-800 bg-black">
           <CardContent className="p-6">
-            <p className="text-xl text-red-400">Error: {error}</p>
+            <p className="text-xl text-red-400">
+              We&apos;re sorry, but an unexpected error occurred.
+            </p>
             <Button
               variant="secondary"
               className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
               asChild
             >
-              <Link href="/">
+              <Link href={`/`}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Return to Home
               </Link>
@@ -88,109 +60,25 @@ export default function Updates() {
     );
   }
 
+  const { project_title, commits } = commitsData;
+
   return (
-    <div className="min-h-screen bg-black py-12">
+    <div className="min-h-screen py-12">
       <div className="mx-auto max-w-4xl px-4">
-        <Card className="border-gray-800 bg-black">
+        <Card className="rounded-xl border border-gray-800 border-gray-800/80 bg-black/50 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
           <CardHeader className="text-center">
             <CardTitle className="text-4xl font-bold text-white">
-              Website Updates
+              Latest Updates
             </CardTitle>
             <p className="mt-2 text-lg text-gray-300">
-              Here are the latest commits to the Lagden Development website
-              repository.
+              Latest commits to lagden.dev.
             </p>
-            <Button
-              variant="secondary"
-              className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
-              asChild
-            >
-              <Link href="/">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Return to Home
-              </Link>
-            </Button>
           </CardHeader>
 
           <CardContent className="p-6">
-            {isLoading ? (
-              <div className="flex h-64 items-center justify-center">
-                <LoadingSpinner />
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {commits.map((commit) => (
-                  <Card
-                    key={commit.sha}
-                    className="cursor-pointer border-gray-800 bg-black transition-colors hover:bg-gray-800"
-                    onClick={() => handleCommitClick(commit)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <GitCommit className="mt-1 h-5 w-5 flex-shrink-0 text-gray-400" />
-                        <div className="flex-grow">
-                          <div className="flex items-center justify-between">
-                            <p className="text-xl font-bold text-white">
-                              {commit.commit.message.length > 50
-                                ? `${commit.commit.message.substring(0, 50)}...`
-                                : commit.commit.message}
-                            </p>
-                            <ChevronRight className="h-5 w-5 text-gray-400" />
-                          </div>
-
-                          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-400">
-                            <Link
-                              href={`https://github.com/Lagden-Development/lagden.dev/commit/${commit.sha}`}
-                              target="_blank"
-                              className="flex items-center hover:text-gray-300"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <code className="font-mono">
-                                {commit.sha.substring(0, 7)}
-                              </code>
-                              <ExternalLink className="ml-1 h-3 w-3" />
-                            </Link>
-
-                            <div className="flex items-center gap-1">
-                              <User className="h-4 w-4" />
-                              <a
-                                href={commit.author.html_url}
-                                target="_blank"
-                                className="hover:text-gray-300"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                {commit.commit.author.name}
-                                <ExternalLink className="ml-1 inline h-3 w-3" />
-                              </a>
-                            </div>
-
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-4 w-4" />
-                              <span>
-                                {new Date(
-                                  commit.commit.author.date
-                                ).toLocaleString()}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
+            <CommitsList commits={commits} />
           </CardContent>
         </Card>
-
-        {selectedCommit && (
-          <CommitModal
-            commit={selectedCommit}
-            owner="Lagden-Development"
-            repo="lagden.dev"
-            onClose={handleCloseModal}
-          />
-        )}
       </div>
     </div>
   );

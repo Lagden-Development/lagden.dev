@@ -2,10 +2,10 @@
 import React from 'react';
 import Navigation from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import MouseGradient from '@/components/shared/ui/MouseGradient';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 import './globals.css';
 
 export const metadata = {
@@ -122,10 +122,19 @@ export default function RootLayout({
           {/* Fixed grid background */}
           <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808025_1px,transparent_1px),linear-gradient(to_bottom,#80808025_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)]" />
 
+          {/* Enhanced gradient overlay */}
+          <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-black via-transparent to-black opacity-60" />
+
+          {/* Mouse gradient effect */}
+          <MouseGradient />
+
+          {/* Navigation */}
           <Navigation />
 
           {/* Main Content */}
-          <main className="relative mt-16 flex-grow px-4 py-8">{children}</main>
+          <main className="relative mx-auto mt-16 max-w-7xl flex-grow px-8">
+            {children}
+          </main>
 
           <Footer />
         </div>

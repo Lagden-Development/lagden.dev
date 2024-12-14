@@ -1,13 +1,9 @@
 // app/people/[slug]/page.tsx
-'use client';
-
-import React from 'react';
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
-import { usePathname } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Document } from '@contentful/rich-text-types';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
   Github,
@@ -18,87 +14,64 @@ import {
   ArrowLeft,
   Briefcase,
 } from 'lucide-react';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import PersonNotFound from '../../components/PersonNotFound';
+import type { Person } from '@/types';
+import { ensureHttps } from '@/helpers';
 
-import { Document } from '@contentful/rich-text-types';
-
-interface Person {
-  name: string;
-  slug: string;
-  occupation: string;
-  location: string;
-  pronouns: string;
-  skills: string[];
-  links: {
-    url: string;
-    name: string;
-  }[];
-  introduction: Document;
-  picture_url: string;
+interface PageProps {
+  params: { slug: string };
 }
 
-// Helper function to ensure image URLs have https protocol
-const ensureHttps = (url: string) => {
-  if (url.startsWith('//')) {
-    return `https:${url}`;
-  }
-  if (!url.startsWith('http')) {
-    return `https://${url}`;
-  }
-  return url;
-};
+async function getPerson(slug: string): Promise<Person | null> {
+  try {
+    const baseUrl = process.env.LAGDEN_DEV_API_BASE_URL;
+    const apiKey = process.env.LAGDEN_DEV_API_KEY;
 
-export default function Person() {
-  const pathname = usePathname();
-  const personSlug = pathname.split('/').pop()?.toLowerCase();
-
-  const [person, setPerson] = useState<Person | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isNotFound, setIsNotFound] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchPerson = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await fetch(`${baseUrl}/ldev-cms/people`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch people');
-        }
-
-        const people: Person[] = await response.json();
-        const foundPerson = people.find(
-          (p) => p.slug.toLowerCase() === personSlug
-        );
-
-        if (foundPerson) {
-          setPerson(foundPerson);
-        } else {
-          setIsNotFound(true);
-        }
-      } catch (error) {
-        console.error('Error loading person:', error);
-        setIsNotFound(true);
-      } finally {
-        setIsLoading(false);
+    const response = await fetch(
+      `${baseUrl}/ldev-cms/people/${slug}?api_key=${apiKey}`,
+      {
+        next: { revalidate: 60 }, // Revalidate every minute
       }
-    };
+    );
 
-    if (personSlug) {
-      fetchPerson();
+    if (!response.ok) {
+      if (response.status === 404) return null;
+      throw new Error('Failed to fetch person');
     }
-  }, [personSlug]);
 
-  if (isLoading) {
+    const person: Person = await response.json();
+    return person;
+  } catch (error) {
+    console.error('Error loading person:', error);
+    return null;
+  }
+}
+
+export default async function Person({ params }: PageProps) {
+  const person = await getPerson(params.slug);
+
+  if (!person) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black">
-        <LoadingSpinner />
+      <div className="flex min-h-screen items-center justify-center">
+        <Card className="mx-4 max-w-lg rounded-xl border border-gray-800/80 bg-black/50 p-8 text-center shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
+          <h1 className="mb-4 bg-gradient-to-br from-white to-gray-400 bg-clip-text text-3xl font-bold text-transparent">
+            Person Not Found
+          </h1>
+          <p className="mb-6 text-gray-400">
+            The person you&apos;re looking for doesn&apos;t exist or has been
+            moved.
+          </p>
+          <Button
+            className="group relative overflow-hidden rounded-full bg-gradient-to-r from-violet-500 via-indigo-500 to-cyan-500 px-6 py-2 text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.4)]"
+            asChild
+          >
+            <Link href="/people" className="flex items-center">
+              <ArrowLeft className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+              Back to People
+            </Link>
+          </Button>
+        </Card>
       </div>
     );
-  }
-
-  if (isNotFound || !person) {
-    return <PersonNotFound />;
   }
 
   // Helper function to find links by name
@@ -109,10 +82,10 @@ export default function Person() {
   const websiteLink = getLink('website');
 
   return (
-    <div className="min-h-screen bg-black py-12">
+    <div className="min-h-screen py-12">
       <div className="mx-auto flex max-w-6xl flex-col px-4 text-white md:flex-row">
         <div className="md:w-1/3 md:pr-8">
-          <Card className="border-gray-800 bg-black">
+          <Card className="border border-gray-800 border-gray-800/80 bg-black/50 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
             <CardContent className="p-6">
               <Image
                 src={ensureHttps(person.picture_url)}
@@ -206,7 +179,7 @@ export default function Person() {
         </div>
 
         <div className="mt-8 md:mt-0 md:w-2/3 md:pl-8">
-          <Card className="border-gray-800 bg-black">
+          <Card className="border border-gray-800 border-gray-800/80 bg-black/50 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <Button
@@ -225,7 +198,7 @@ export default function Person() {
               <div className="border-t-2 border-gray-800"></div>
               <div
                 dangerouslySetInnerHTML={{
-                  __html: documentToHtmlString(person.introduction),
+                  __html: documentToHtmlString(person.introduction as Document),
                 }}
                 className="prose prose-invert max-w-none pt-6"
               />

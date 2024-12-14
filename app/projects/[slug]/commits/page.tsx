@@ -1,249 +1,109 @@
-// app/projects/[slug]/commits/page.tsx
-'use client';
-
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, GitCommit, ExternalLink } from 'lucide-react';
-import CommitModal from '@/components/CommitModal';
+import { ArrowLeft } from 'lucide-react';
+import { CommitsList } from '@/components/shared/ui/CommitsList';
+import type { CommitsResponse } from '@/types';
 
-interface Project {
-  title: string;
-  slug: string;
-  description: string;
-  tags: string[];
-  github_repo_url: string;
-  website_url: string;
-  project_readme: Record<string, any>;
-  picture_url: string;
-  better_stack_status_id: string;
-  is_featured: boolean;
+interface PageProps {
+  params: { slug: string };
 }
 
-type Commit = {
-  sha: string;
-  commit: {
-    message: string;
-    author: {
-      name: string;
-      date: string;
-    };
-  };
-  author: {
-    login: string;
-    html_url: string;
-  };
-};
+async function getCommits(slug: string): Promise<CommitsResponse | null> {
+  try {
+    const baseUrl = process.env.LAGDEN_DEV_API_BASE_URL;
+    const apiKey = process.env.LAGDEN_DEV_API_KEY;
 
-const CommitsPage = () => {
-  const params = useParams();
-  const slug = params?.slug as string;
-  const [commits, setCommits] = useState<Commit[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedCommit, setSelectedCommit] = useState<Commit | null>(null);
-  const [project, setProject] = useState<Project | null>(null);
-  const [owner, setOwner] = useState<string>('');
-  const [repo, setRepo] = useState<string>('');
-
-  useEffect(() => {
-    if (!slug) return;
-
-    const fetchProject = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await fetch(`${baseUrl}/ldev-cms/projects`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch projects');
-        }
-
-        const projects: Project[] = await response.json();
-        const foundProject = projects.find((p) => p.slug === slug);
-
-        if (!foundProject) {
-          throw new Error('Project not found');
-        }
-
-        setProject(foundProject);
-
-        // Parse GitHub URL
-        const repoUrl = foundProject.github_repo_url;
-        if (!repoUrl) {
-          setError('No GitHub repository URL found');
-          setIsLoading(false);
-          return;
-        }
-
-        const repoNameMatch = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
-        if (!repoNameMatch) {
-          setError('Invalid GitHub URL');
-          setIsLoading(false);
-          return;
-        }
-
-        const fetchedOwner = repoNameMatch[1];
-        const fetchedRepo = repoNameMatch[2].replace('.git', '');
-
-        setOwner(fetchedOwner);
-        setRepo(fetchedRepo);
-
-        // Fetch commits
-        const commitsResponse = await axios.get('/api/get-commits', {
-          params: {
-            owner: fetchedOwner,
-            repo: fetchedRepo,
-          },
-        });
-
-        setCommits(commitsResponse.data);
-        setIsLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        setIsLoading(false);
+    const response = await fetch(
+      `${baseUrl}/ldev-cms/projects/${slug}/commits?api_key=${apiKey}&limit=10`,
+      {
+        next: { revalidate: 60 },
       }
-    };
+    );
 
-    fetchProject();
-  }, [slug]);
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error('Failed to fetch commits');
+    }
 
-  const handleCommitClick = (commit: Commit) => {
-    setSelectedCommit(commit);
-  };
+    const data: CommitsResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching commits:', error);
+    return null;
+  }
+}
 
-  const handleCloseModal = () => {
-    setSelectedCommit(null);
-  };
+export default async function CommitsPage({ params }: PageProps) {
+  const commitsData = await getCommits(params.slug);
 
-  if (error) {
+  if (!commitsData) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black p-4">
-        <Card className="border-gray-800 bg-black">
-          <CardContent className="p-6">
-            <p className="text-xl text-red-400">Error: {error}</p>
-            <Button
-              variant="secondary"
-              className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
-              asChild
-            >
-              <Link href={`/projects/${slug}`}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Return to Project
-              </Link>
-            </Button>
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <Card className="w-full max-w-lg border-gray-800 bg-black/50 shadow-xl backdrop-blur-md">
+          <CardContent className="p-8">
+            <div className="text-center">
+              <p className="mb-6 text-xl font-semibold text-red-400">
+                Error: Project not found
+              </p>
+              <Button
+                className="group relative overflow-hidden rounded-full border border-gray-800 bg-black px-4 py-2 text-white transition-all duration-300 hover:border-violet-500/50 hover:shadow-[0_0_15px_rgba(124,58,237,0.2)]"
+                asChild
+              >
+                <Link
+                  href={`/projects/${params.slug}`}
+                  className="flex items-center"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+                  <span>Back to Project</span>
+                </Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  if (!project) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-black">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent" />
-      </div>
-    );
-  }
+  const { project_title, commits } = commitsData;
 
   return (
-    <div className="min-h-screen bg-black py-12">
+    <div className="min-h-screen py-12">
       <div className="mx-auto max-w-4xl px-4">
-        <Card className="border-gray-800 bg-black">
-          <CardHeader className="text-center">
-            <CardTitle className="text-4xl font-bold text-white">
-              Commit Updates
-            </CardTitle>
-            <p className="mt-2 text-lg text-gray-300">
-              Latest commits to the {project.title} repository.
-            </p>
-            <Button
-              variant="secondary"
-              className="mt-4 bg-gray-800 text-white hover:bg-gray-700"
-              asChild
-            >
-              <Link href={`/projects/${project.slug}`}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Return to {project.title}
-              </Link>
-            </Button>
+        <Card className="rounded-xl border border-gray-800 bg-black/50 shadow-xl backdrop-blur-md">
+          <CardHeader className="relative pb-6">
+            <div className="absolute left-6 top-6">
+              <Button
+                className="group relative overflow-hidden rounded-full border border-gray-800 bg-black px-4 py-2 text-white transition-all duration-300 hover:border-violet-500/50 hover:shadow-[0_0_15px_rgba(124,58,237,0.2)]"
+                asChild
+              >
+                <Link
+                  href={`/projects/${params.slug}`}
+                  className="flex items-center"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+                  <span>Back to {project_title}</span>
+                </Link>
+              </Button>
+            </div>
+
+            <div className="pt-8 text-center">
+              <CardTitle className="text-4xl font-bold text-white">
+                Commit Updates
+              </CardTitle>
+              <p className="mt-3 text-lg text-gray-300">
+                Latest commits to the {project_title} repository
+              </p>
+            </div>
           </CardHeader>
 
           <CardContent className="p-6">
-            {isLoading ? (
-              <div className="flex h-64 items-center justify-center">
-                <div className="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent" />
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {commits.map((commit) => (
-                  <Card
-                    key={commit.sha}
-                    className="cursor-pointer border-gray-800 bg-black transition-colors hover:bg-gray-800"
-                    onClick={() => handleCommitClick(commit)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <GitCommit className="mt-1 h-5 w-5 flex-shrink-0 text-gray-400" />
-                        <div className="flex-grow text-left">
-                          <p className="text-xl font-bold text-white">
-                            {commit.commit.message.length > 50
-                              ? `${commit.commit.message.substring(0, 50)}...`
-                              : commit.commit.message}
-                          </p>
-                          <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-400">
-                            <Link
-                              href={`https://github.com/${owner}/${repo}/commit/${commit.sha}`}
-                              target="_blank"
-                              className="flex items-center hover:text-gray-300"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {commit.sha.substring(0, 7)}
-                              <ExternalLink className="ml-1 h-3 w-3" />
-                            </Link>
-                            <span>by</span>
-                            {commit.author ? (
-                              <a
-                                href={commit.author.html_url}
-                                target="_blank"
-                                className="hover:text-gray-300"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                {commit.commit.author.name}
-                                <ExternalLink className="ml-1 inline h-3 w-3" />
-                              </a>
-                            ) : (
-                              <span>{commit.commit.author.name}</span>
-                            )}
-                            <span>•</span>
-                            <span>
-                              {new Date(
-                                commit.commit.author.date
-                              ).toLocaleString()}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
+            <CommitsList commits={commits} />
           </CardContent>
         </Card>
-
-        {selectedCommit && (
-          <CommitModal
-            commit={selectedCommit}
-            owner={owner}
-            repo={repo}
-            onClose={handleCloseModal}
-          />
-        )}
       </div>
     </div>
   );
-};
-
-export default CommitsPage;
+}
