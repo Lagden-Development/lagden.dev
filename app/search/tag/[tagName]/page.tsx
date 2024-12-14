@@ -36,7 +36,7 @@ async function getProjectTitle(slug: string): Promise<string | null> {
 export default async function TagSearch({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  
+
   const tagName = decodeURIComponent(resolvedParams.tagName);
   const fromProject = resolvedSearchParams.fromProject as string | undefined;
   const projectTitle = fromProject ? await getProjectTitle(fromProject) : null;

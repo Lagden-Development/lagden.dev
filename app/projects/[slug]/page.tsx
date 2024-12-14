@@ -105,7 +105,7 @@ export default async function ProjectPage({ params, searchParams }: PageProps) {
                     <StatusIndicator
                       status={project.status.status}
                       lastCheckedAt={project.status.last_checked_at}
-                      url='https://status.lagden.dev'
+                      url="https://status.lagden.dev"
                     />
                   )}
                 </div>
