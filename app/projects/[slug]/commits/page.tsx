@@ -6,7 +6,7 @@ import { CommitsList } from '@/components/shared/ui/CommitsList';
 import type { CommitsResponse } from '@/types';
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 async function getCommits(slug: string): Promise<CommitsResponse | null> {
@@ -37,7 +37,8 @@ async function getCommits(slug: string): Promise<CommitsResponse | null> {
 }
 
 export default async function CommitsPage({ params }: PageProps) {
-  const commitsData = await getCommits(params.slug);
+  const resolvedParams = await params;
+  const commitsData = await getCommits(resolvedParams.slug);
 
   if (!commitsData) {
     return (
@@ -53,7 +54,7 @@ export default async function CommitsPage({ params }: PageProps) {
                 asChild
               >
                 <Link
-                  href={`/projects/${params.slug}`}
+                  href={`/projects/${resolvedParams.slug}`}
                   className="flex items-center"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
@@ -80,7 +81,7 @@ export default async function CommitsPage({ params }: PageProps) {
                 asChild
               >
                 <Link
-                  href={`/projects/${params.slug}`}
+                  href={`/projects/${resolvedParams.slug}`}
                   className="flex items-center"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />

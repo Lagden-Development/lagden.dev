@@ -18,7 +18,7 @@ import type { Person } from '@/types';
 import { ensureHttps } from '@/helpers';
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 async function getPerson(slug: string): Promise<Person | null> {
@@ -46,8 +46,9 @@ async function getPerson(slug: string): Promise<Person | null> {
   }
 }
 
-export default async function Person({ params }: PageProps) {
-  const person = await getPerson(params.slug);
+export default async function PersonPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const person = await getPerson(resolvedParams.slug);
 
   if (!person) {
     return (

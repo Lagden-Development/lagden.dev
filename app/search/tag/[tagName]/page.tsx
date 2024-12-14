@@ -5,8 +5,8 @@ import { ArrowLeft, Tag } from 'lucide-react';
 import ProjectsGrid from '@/components/shared/ui/ProjectsGrid';
 
 interface PageProps {
-  params: { tagName: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ tagName: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 async function getProjectTitle(slug: string): Promise<string | null> {
@@ -34,8 +34,11 @@ async function getProjectTitle(slug: string): Promise<string | null> {
 }
 
 export default async function TagSearch({ params, searchParams }: PageProps) {
-  const tagName = decodeURIComponent(params.tagName);
-  const fromProject = searchParams.fromProject as string | undefined;
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  
+  const tagName = decodeURIComponent(resolvedParams.tagName);
+  const fromProject = resolvedSearchParams.fromProject as string | undefined;
   const projectTitle = fromProject ? await getProjectTitle(fromProject) : null;
 
   return (

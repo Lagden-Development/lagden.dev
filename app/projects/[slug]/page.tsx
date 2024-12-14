@@ -17,8 +17,8 @@ import type { Project } from '@/types';
 import { ensureHttps } from '@/helpers';
 
 interface PageProps {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 async function getProject(slug: string): Promise<Project | null> {
@@ -46,13 +46,13 @@ async function getProject(slug: string): Promise<Project | null> {
   }
 }
 
-export default async function Project({ params, searchParams }: PageProps) {
-  const { slug } = await params;
+export default async function ProjectPage({ params, searchParams }: PageProps) {
+  const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   const fromParam = resolvedSearchParams['from'];
   const fromHome = fromParam === 'home';
 
-  const project = await getProject(slug);
+  const project = await getProject(resolvedParams.slug);
 
   if (!project) {
     return (
