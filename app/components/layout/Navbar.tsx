@@ -133,14 +133,14 @@ export default function Navigation() {
                 })()}
               </div>
 
-                <Button
+              <Button
                 variant="outline"
                 size="icon"
                 className="relative overflow-hidden rounded-full border border-gray-800/50 bg-black/20 p-2 text-gray-400 transition-all duration-300 hover:border-violet-500/30 hover:bg-black/40 hover:text-white hover:shadow-[0_0_15px_rgba(124,58,237,0.2)] md:hidden"
                 onClick={toggleMenu}
-                >
+              >
                 <Menu className="h-5 w-5" />
-                </Button>
+              </Button>
 
               {isMenuOpen && (
                 <Card
