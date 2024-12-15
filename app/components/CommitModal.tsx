@@ -1,4 +1,7 @@
+'use client';
+
 import React, { useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, GitCommit, ExternalLink, User, Calendar } from 'lucide-react';
@@ -43,14 +46,21 @@ const CommitModal: React.FC<CommitModalProps> = ({
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
+    document.body.style.overflow = 'hidden';
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'unset';
     };
   }, [handleClickOutside]);
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-      <Card className="modal-content relative w-full max-w-2xl rounded-xl border-gray-800 bg-black">
+  const modalContent = (
+    <div className="fixed inset-0 isolate z-[9999] flex items-center justify-center overflow-y-auto overflow-x-hidden">
+      <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+        aria-hidden="true"
+      />
+      <Card className="modal-content relative z-[10000] m-4 w-full max-w-2xl rounded-xl border-gray-800 bg-black">
         <Button
           variant="ghost"
           size="icon"
@@ -154,6 +164,8 @@ const CommitModal: React.FC<CommitModalProps> = ({
       </Card>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
 
 export default CommitModal;
