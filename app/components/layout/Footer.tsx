@@ -30,7 +30,7 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-8 md:flex-row md:justify-between">
           <div className="flex flex-col items-center md:items-start">
             <p className="bg-gradient-to-r from-gray-400 to-gray-500 bg-clip-text text-sm text-transparent">
-              © 2024 Lagden Development
+              © {new Date().getFullYear()} Lagden Development
             </p>
           </div>
 
