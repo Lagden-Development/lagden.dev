@@ -60,37 +60,7 @@
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://lagden.dev/search/tag/python?fromProject=rickbot</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/discord.py?fromProject=rickbot</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/mongodb?fromProject=rickbot</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
   <loc>https://lagden.dev/projects/rickbot/commits</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/python?fromProject=flask-obfuscate</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/flask?fromProject=flask-obfuscate</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/obfuscation?fromProject=flask-obfuscate</loc>
   <lastmod>2025-03-09T09:09:41+00:00</lastmod>
   <priority>0.64</priority>
 </url>
@@ -100,82 +70,12 @@
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://lagden.dev/search/tag/python?fromProject=discord-timestamps</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/discord.py?fromProject=discord-timestamps</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/discord?fromProject=discord-timestamps</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
   <loc>https://lagden.dev/projects/discord-timestamps/commits</loc>
   <lastmod>2025-03-09T09:09:41+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://lagden.dev/search/tag/python?fromProject=api-lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/fastapi?fromProject=api-lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/api?fromProject=api-lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/mongodb?fromProject=api-lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/swagger-ui?fromProject=api-lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/openapi?fromProject=api-lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/redoc?fromProject=api-lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
   <loc>https://lagden.dev/projects/api-lagden-dev/commits</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/nextjs?fromProject=lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/typescript?fromProject=lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/nodejs?fromProject=lagden-dev</loc>
-  <lastmod>2025-03-09T09:09:41+00:00</lastmod>
-  <priority>0.51</priority>
-</url>
-<url>
-  <loc>https://lagden.dev/search/tag/tailwind%20css?fromProject=lagden-dev</loc>
   <lastmod>2025-03-09T09:09:41+00:00</lastmod>
   <priority>0.51</priority>
 </url>
