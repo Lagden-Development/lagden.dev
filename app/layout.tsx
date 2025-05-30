@@ -3,7 +3,9 @@ import React from 'react';
 import Navigation from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import MouseGradient from '@/components/shared/ui/MouseGradient';
-import { GoogleAnalytics } from '@next/third-parties/google';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { WebVitals } from '@/lib/web-vitals';
+import SafeAnalytics from '@/components/SafeAnalytics';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import './globals.css';
@@ -116,7 +118,22 @@ export default function RootLayout({
         className="min-h-screen bg-black font-sans text-white antialiased"
         suppressHydrationWarning
       >
-        <GoogleAnalytics gaId="G-JHDS9FXCK2" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            // Global error handler to prevent ad blockers from breaking the site
+            window.addEventListener('error', function(e) {
+              if (e.message && e.message.includes('gtag') || e.message.includes('analytics')) {
+                console.info('Analytics blocked by browser extension. Site continues normally.');
+                e.preventDefault();
+                return false;
+              }
+            });
+          `,
+          }}
+        />
+        <SafeAnalytics gaId="G-JHDS9FXCK2" />
+        <WebVitals />
 
         <div className="relative min-h-screen bg-black text-white">
           {/* Fixed grid background */}
@@ -133,7 +150,7 @@ export default function RootLayout({
 
           {/* Main Content */}
           <main className="relative mx-auto mt-16 max-w-7xl flex-grow px-8">
-            {children}
+            <ErrorBoundary>{children}</ErrorBoundary>
           </main>
 
           <Footer />

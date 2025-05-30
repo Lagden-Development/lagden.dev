@@ -3,6 +3,649 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom font face for variable font weights */
+@supports (font-variation-settings: normal) {
+  .font-variable {
+    font-family: var(--font-geist-sans);
+    font-weight: 100 900;
+  }
+}
+
+/* Section header letter-spacing transitions */
+.section-header {
+  @apply transition-all duration-500;
+  letter-spacing: 0;
+}
+
+.section-header-scrolled {
+  letter-spacing: -0.05em;
+}
+
+/* Stagger animation classes for unlimited grid items */
+.stagger-item-hidden {
+  @apply opacity-0;
+  transform: translateY(15px) rotate(-1deg);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+
+.stagger-item-visible {
+  @apply opacity-100;
+  transform: translateY(0) rotate(0);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+
+/* Line clamp utilities for consistent text truncation */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Commit timeline animations */
+@keyframes commit-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes commit-art-glow {
+  from {
+    filter: brightness(1) saturate(1);
+  }
+  to {
+    filter: brightness(1.1) saturate(1.2);
+  }
+}
+
+@keyframes commit-glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(139, 92, 246, 0.6),
+      0 0 40px rgba(139, 92, 246, 0.2);
+  }
+}
+
+.commit-card {
+  animation: commit-fade-in 0.6s ease-out forwards;
+}
+
+.commit-art {
+  transition: all 0.3s ease-out;
+}
+
+.commit-card:hover .commit-art {
+  animation: commit-art-glow 0.5s ease-out forwards;
+}
+
+.commit-timeline-dot {
+  animation: commit-glow-pulse 3s ease-in-out infinite;
+}
+
+/* Smooth reveal animation for commit lists */
+.commits-container {
+  animation: commit-fade-in 0.8s ease-out;
+}
+
+/* Dynamic hero typography based on viewport height */
+@media (max-height: 600px) {
+  .hero-title {
+    font-size: 2.5rem !important;
+    line-height: 1.1 !important;
+  }
+}
+
+@media (min-height: 601px) and (max-height: 700px) {
+  .hero-title {
+    font-size: 3.5rem !important;
+    line-height: 1.1 !important;
+  }
+}
+
+@media (min-height: 701px) and (max-height: 900px) {
+  .hero-title {
+    font-size: 4.5rem !important;
+    line-height: 1.1 !important;
+  }
+}
+
+@media (min-height: 901px) and (max-height: 1100px) {
+  .hero-title {
+    font-size: 6rem !important;
+    line-height: 1.1 !important;
+  }
+}
+
+@media (min-height: 1101px) {
+  .hero-title {
+    font-size: 7rem !important;
+    line-height: 1.1 !important;
+  }
+}
+
+/* Tilt card wrapper styles */
+.tilt-card-wrapper {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+}
+
+/* Ensure proper stacking context */
+.tilt-card-wrapper > * {
+  transform-style: preserve-3d;
+}
+
+/* Card evolution states */
+.card-interactive {
+  @apply relative overflow-hidden rounded-xl border border-gray-800/80 bg-black/50 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md transition-all duration-300;
+}
+
+.card-interactive:hover {
+  @apply border-violet-500/30 shadow-[0_0_25px_rgba(124,58,237,0.2)];
+}
+
+.card-interactive:active {
+  @apply scale-[0.98] border-violet-500/50 shadow-[0_0_30px_rgba(124,58,237,0.3)];
+}
+
+.card-interactive.selected {
+  @apply border-violet-500/60 bg-violet-500/5 shadow-[0_0_35px_rgba(124,58,237,0.4)];
+}
+
+/* Card inner glow effect */
+.card-glow {
+  @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(139, 92, 246, 0.15) 0%,
+    transparent 70%
+  );
+}
+
+.card-interactive:hover .card-glow {
+  @apply opacity-100;
+}
+
+/* Card gradient overlay */
+.card-gradient-overlay {
+  @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+}
+
+.card-interactive:hover .card-gradient-overlay {
+  @apply opacity-100;
+}
+
+/* Advanced Glassmorphism 2.0 */
+.glass-layer-1 {
+  @apply relative overflow-hidden rounded-xl border border-white/10;
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+}
+
+.glass-layer-2 {
+  @apply absolute inset-0 rounded-xl;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  mix-blend-mode: overlay;
+}
+
+.glass-layer-3 {
+  @apply absolute inset-0 rounded-xl opacity-0 transition-opacity duration-500;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(139, 92, 246, 0.15) 0%,
+    transparent 50%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-container:hover .glass-layer-3 {
+  @apply opacity-100;
+}
+
+/* Refraction effect on glass edges */
+.glass-refraction {
+  @apply absolute inset-0 rounded-xl opacity-0 transition-all duration-300;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.05) 10%,
+    transparent 20%,
+    rgba(236, 72, 153, 0.05) 30%,
+    transparent 40%,
+    rgba(59, 130, 246, 0.05) 50%,
+    transparent 60%,
+    rgba(139, 92, 246, 0.05) 70%,
+    transparent 80%,
+    rgba(236, 72, 153, 0.05) 90%,
+    transparent 100%
+  );
+  filter: blur(1px);
+  transform: translateX(-100%);
+}
+
+.glass-container:hover .glass-refraction {
+  @apply opacity-100;
+  transform: translateX(100%);
+  transition:
+    transform 2s ease-in-out,
+    opacity 0.3s ease-out;
+}
+
+/* Chromatic aberration on glass edges */
+.glass-chromatic {
+  @apply pointer-events-none absolute inset-0 rounded-xl;
+}
+
+.glass-chromatic::before,
+.glass-chromatic::after {
+  content: '';
+  @apply absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300;
+  border: 1px solid transparent;
+}
+
+.glass-chromatic::before {
+  border-color: rgba(255, 0, 0, 0.1);
+  transform: translate(-1px, -1px);
+}
+
+.glass-chromatic::after {
+  border-color: rgba(0, 0, 255, 0.1);
+  transform: translate(1px, 1px);
+}
+
+.glass-container:hover .glass-chromatic::before,
+.glass-container:hover .glass-chromatic::after {
+  @apply opacity-100;
+}
+
+/* Glass shine effect */
+.glass-shine {
+  @apply absolute inset-0 rounded-xl opacity-0 transition-opacity duration-500;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 60%
+  );
+  animation: glass-shine-sweep 3s infinite;
+}
+
+@keyframes glass-shine-sweep {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+.glass-container:hover .glass-shine {
+  @apply opacity-100;
+}
+
+/* Floating animation for code symbols */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(20px) rotate(3deg);
+  }
+}
+
+.animate-float {
+  animation: float linear infinite;
+}
+
+/* Fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Modal animations */
+@keyframes zoom-in-95 {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-in {
+  animation: zoom-in-95 0.2s ease-out;
+}
+
+/* Spin animation for loading states */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 6s linear infinite;
+}
+
+/* Animation delay utility */
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+/* Status Modal Enhancements */
+.status-modal-backdrop {
+  @apply fixed inset-0 z-[200] flex items-center justify-center p-4;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+.status-modal-container {
+  @apply relative w-full max-w-lg;
+  transform-style: preserve-3d;
+}
+
+.status-modal {
+  @apply relative overflow-hidden rounded-2xl shadow-2xl;
+  background: linear-gradient(
+    135deg,
+    rgba(20, 20, 20, 0.95) 0%,
+    rgba(10, 10, 10, 0.98) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 24px 48px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 0 120px -20px var(--status-glow-color, rgba(139, 92, 246, 0.3));
+}
+
+/* Status-specific glow colors */
+.status-modal[data-status='operational'] {
+  --status-glow-color: rgba(16, 185, 129, 0.4);
+}
+
+.status-modal[data-status='degraded'] {
+  --status-glow-color: rgba(245, 158, 11, 0.4);
+}
+
+.status-modal[data-status='down'] {
+  --status-glow-color: rgba(239, 68, 68, 0.4);
+}
+
+.status-modal[data-status='maintenance'] {
+  --status-glow-color: rgba(59, 130, 246, 0.4);
+}
+
+/* Animated gradient background for modal */
+.status-modal-gradient {
+  @apply absolute inset-0 opacity-20;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    var(--gradient-from, #8b5cf6) 0deg,
+    var(--gradient-via, #ec4899) 120deg,
+    var(--gradient-to, #3b82f6) 240deg,
+    var(--gradient-from, #8b5cf6) 360deg
+  );
+  animation: status-gradient-rotate 10s linear infinite;
+  filter: blur(40px);
+}
+
+@keyframes status-gradient-rotate {
+  from {
+    transform: rotate(0deg) scale(1.5);
+  }
+  to {
+    transform: rotate(360deg) scale(1.5);
+  }
+}
+
+/* Enhanced status icon container */
+.status-icon-container {
+  @apply relative inline-flex items-center justify-center;
+  transform-style: preserve-3d;
+}
+
+.status-icon-ring {
+  @apply absolute inset-0 rounded-full;
+  background: radial-gradient(
+    circle,
+    var(--ring-color, rgba(139, 92, 246, 0.2)) 0%,
+    transparent 70%
+  );
+  animation: status-ring-pulse 2s ease-in-out infinite;
+}
+
+@keyframes status-ring-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.2;
+  }
+}
+
+/* Metric card enhancements */
+.status-metric-card {
+  @apply relative overflow-hidden rounded-xl p-4 text-center;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.status-metric-card::before {
+  content: '';
+  @apply absolute inset-0;
+  background: radial-gradient(
+    circle at 50% 0%,
+    var(--metric-glow, rgba(139, 92, 246, 0.1)) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.status-metric-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 10px 20px -5px rgba(0, 0, 0, 0.4),
+    0 0 40px -10px var(--metric-glow, rgba(139, 92, 246, 0.3));
+}
+
+.status-metric-card:hover::before {
+  opacity: 1;
+}
+
+/* Metric value animations */
+.status-metric-value {
+  @apply font-bold;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Enhanced modal entry animation */
+@keyframes status-modal-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px) rotateX(-5deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotateX(0);
+  }
+}
+
+.status-modal-animate-in {
+  animation: status-modal-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Backdrop animation */
+@keyframes backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.backdrop-animate-in {
+  animation: backdrop-fade-in 0.3s ease-out forwards;
+}
+
+/* Close button enhancement */
+.status-close-button {
+  @apply absolute right-4 top-4 z-10 rounded-full p-2;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.status-close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Action button enhancements */
+.status-action-button {
+  @apply relative overflow-hidden rounded-xl px-4 py-3 text-sm font-medium;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.status-action-button::before {
+  content: '';
+  @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 100%
+  );
+}
+
+.status-action-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.status-action-button:hover::before {
+  opacity: 1;
+}
+
+.status-action-button-primary {
+  background: linear-gradient(
+    135deg,
+    var(--button-from, #8b5cf6) 0%,
+    var(--button-to, #ec4899) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.status-action-button-primary:hover {
+  box-shadow:
+    0 10px 30px -10px rgba(139, 92, 246, 0.5),
+    0 0 40px -10px var(--button-from, #8b5cf6);
+}
+
+/* Shimmer effect for primary button */
+.status-action-button-primary::after {
+  content: '';
+  @apply absolute inset-0 opacity-0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 60%
+  );
+  animation: button-shimmer 2s infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes button-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.status-action-button-primary:hover::after {
+  opacity: 1;
+}
+
 html,
 body,
 #__next {
@@ -75,5 +718,16 @@ body,
   }
   body {
     @apply bg-background text-foreground;
+  }
+  /* Global line-height improvement for better readability */
+  p,
+  li,
+  dd,
+  blockquote {
+    @apply leading-extra-relaxed;
+  }
+  /* Dynamic font weights for Geist Sans */
+  .font-sans {
+    font-variation-settings: 'wght' var(--font-weight, 400);
   }
 }

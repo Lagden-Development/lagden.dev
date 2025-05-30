@@ -1,4 +1,7 @@
-// app/people/[slug]/page.tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
@@ -16,50 +19,53 @@ import {
 } from 'lucide-react';
 import type { Person } from '@/types';
 import { ensureHttps } from '@/helpers';
+import { getPersonClient } from '@/lib/api-client';
+import PersonDetailSkeleton from '@/components/skeletons/PersonDetailSkeleton';
 
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
+export default function PersonPage() {
+  const params = useParams();
+  const [person, setPerson] = useState<Person | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-async function getPerson(slug: string): Promise<Person | null> {
-  try {
-    const baseUrl = process.env.LAGDEN_DEV_API_BASE_URL;
-    const apiKey = process.env.LAGDEN_DEV_API_KEY;
+  const slug = params.slug as string;
 
-    const response = await fetch(
-      `${baseUrl}/ldev-cms/people/${slug}?api_key=${apiKey}`,
-      {
-        next: { revalidate: 60 }, // Revalidate every minute
+  useEffect(() => {
+    const fetchPerson = async () => {
+      try {
+        setLoading(true);
+        console.log(`[PersonPage] Fetching person: ${slug}`);
+        const fetchedPerson = await getPersonClient(slug);
+        setPerson(fetchedPerson);
+        setError(null);
+      } catch (err) {
+        console.error(`[PersonPage] Error fetching person:`, err);
+        setError('Failed to load person');
+        setPerson(null);
+      } finally {
+        setLoading(false);
       }
-    );
+    };
 
-    if (!response.ok) {
-      if (response.status === 404) return null;
-      throw new Error('Failed to fetch person');
+    if (slug) {
+      fetchPerson();
     }
+  }, [slug]);
 
-    const person: Person = await response.json();
-    return person;
-  } catch (error) {
-    console.error('Error loading person:', error);
-    return null;
+  if (loading) {
+    return <PersonDetailSkeleton />;
   }
-}
 
-export default async function PersonPage({ params }: PageProps) {
-  const resolvedParams = await params;
-  const person = await getPerson(resolvedParams.slug);
-
-  if (!person) {
+  if (error || !person) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Card className="mx-4 max-w-lg rounded-xl border border-gray-800/80 bg-black/50 p-8 text-center shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
+        <div className="relative mx-4 max-w-lg overflow-hidden rounded-xl border border-gray-800/80 bg-black/50 p-8 text-center shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
           <h1 className="mb-4 bg-gradient-to-br from-white to-gray-400 bg-clip-text text-3xl font-bold text-transparent">
-            Person Not Found
+            {error ? 'Error Loading Person' : 'Person Not Found'}
           </h1>
           <p className="mb-6 text-gray-400">
-            The person you&apos;re looking for doesn&apos;t exist or has been
-            moved.
+            {error ||
+              "The person you're looking for doesn't exist or has been moved."}
           </p>
           <Button
             className="group relative overflow-hidden rounded-full bg-gradient-to-r from-violet-500 via-indigo-500 to-cyan-500 px-6 py-2 text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.4)]"
@@ -70,7 +76,7 @@ export default async function PersonPage({ params }: PageProps) {
               Back to People
             </Link>
           </Button>
-        </Card>
+        </div>
       </div>
     );
   }
@@ -86,16 +92,24 @@ export default async function PersonPage({ params }: PageProps) {
     <div className="min-h-screen py-12">
       <div className="mx-auto flex max-w-6xl flex-col px-4 text-white md:flex-row">
         <div className="md:w-1/3 md:pr-8">
-          <Card className="border border-gray-800 border-gray-800/80 bg-black/50 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
-            <CardContent className="p-6">
-              <Image
-                src={ensureHttps(person.picture_url)}
-                alt={person.name}
-                width={400}
-                height={400}
-                className="mb-6 rounded-lg object-cover"
-                priority
-              />
+          <div className="relative overflow-hidden rounded-xl border border-gray-800/80 bg-black/50 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
+            <div className="p-6">
+              {ensureHttps(person.picture_url) ? (
+                <Image
+                  src={ensureHttps(person.picture_url)!}
+                  alt={person.name}
+                  width={400}
+                  height={400}
+                  className="mb-6 rounded-lg object-cover"
+                  priority
+                />
+              ) : (
+                <div className="mb-6 flex h-96 w-full items-center justify-center rounded-lg bg-gradient-to-br from-violet-500/5 via-fuchsia-500/5 to-indigo-500/5">
+                  <div className="rounded-full bg-gradient-to-br from-violet-500/20 via-fuchsia-500/20 to-indigo-500/20 p-12">
+                    <div className="h-24 w-24 rounded-full bg-gradient-to-br from-violet-500/30 to-fuchsia-500/30" />
+                  </div>
+                </div>
+              )}
               <h1 className="mb-2 text-4xl font-bold text-white">
                 {person.name}
               </h1>
@@ -175,13 +189,13 @@ export default async function PersonPage({ params }: PageProps) {
                   </Button>
                 )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         <div className="mt-8 md:mt-0 md:w-2/3 md:pl-8">
-          <Card className="border border-gray-800 border-gray-800/80 bg-black/50 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
-            <CardHeader>
+          <div className="relative overflow-hidden rounded-xl border border-gray-800/80 bg-black/50 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md">
+            <div className="p-6">
               <div className="flex items-center justify-between">
                 <Button
                   variant="secondary"
@@ -194,8 +208,8 @@ export default async function PersonPage({ params }: PageProps) {
                   </Link>
                 </Button>
               </div>
-            </CardHeader>
-            <CardContent>
+            </div>
+            <div className="p-6">
               <div className="border-t-2 border-gray-800"></div>
               <div
                 dangerouslySetInnerHTML={{
@@ -203,8 +217,8 @@ export default async function PersonPage({ params }: PageProps) {
                 }}
                 className="prose prose-invert max-w-none pt-6"
               />
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>

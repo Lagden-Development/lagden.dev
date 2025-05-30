@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { Github, Mail, FileJson, ArrowUpRight } from 'lucide-react';
+import { Github, Mail, FileJson, ArrowUpRight, Terminal } from 'lucide-react';
+import Link from 'next/link';
 
 const footerLinks = [
   {
@@ -32,6 +33,13 @@ export default function Footer() {
             <p className="bg-gradient-to-r from-gray-400 to-gray-500 bg-clip-text text-sm text-transparent">
               © {new Date().getFullYear()} Lagden Development
             </p>
+            <Link
+              href="/nerds"
+              className="mt-2 inline-flex items-center gap-1 text-xs text-gray-600 transition-colors hover:text-green-400"
+            >
+              <Terminal className="h-3 w-3" />
+              nerds click here
+            </Link>
           </div>
 
           <div className="flex flex-wrap items-center gap-6">

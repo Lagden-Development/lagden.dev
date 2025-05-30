@@ -12,6 +12,7 @@ import {
   Bell,
   Menu,
   ChevronRight,
+  Search,
 } from 'lucide-react';
 
 const navigationLinks = [
@@ -22,6 +23,7 @@ const navigationLinks = [
     icon: <FolderGit2 className="h-4 w-4" />,
   },
   { path: '/people', label: 'People', icon: <Users className="h-4 w-4" /> },
+  { path: '/search', label: 'Search', icon: <Search className="h-4 w-4" /> },
   { path: '/updates', label: 'Updates', icon: <Bell className="h-4 w-4" /> },
 ];
 
@@ -108,7 +110,7 @@ export default function Navigation() {
               </Link>
 
               <div className="hidden space-x-2 md:flex">
-                {navigationLinks.slice(0, 3).map(({ path, label, icon }) => {
+                {navigationLinks.slice(0, 4).map(({ path, label, icon }) => {
                   const { base, state } = getDesktopLinkClass(path);
                   return (
                     <Link key={path} href={path} className={`${base} ${state}`}>

@@ -3,34 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Tag } from 'lucide-react';
 import ProjectsGrid from '@/components/shared/ui/ProjectsGrid';
+import { getProject } from '@/lib/api-client';
 
 interface PageProps {
   params: Promise<{ tagName: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-async function getProjectTitle(slug: string): Promise<string | null> {
-  try {
-    const baseUrl = process.env.LAGDEN_DEV_API_BASE_URL;
-    const apiKey = process.env.LAGDEN_DEV_API_KEY;
-
-    const response = await fetch(
-      `${baseUrl}/ldev-cms/projects/${slug}?api_key=${apiKey}`,
-      {
-        next: { revalidate: 60 },
-      }
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    return data.title;
-  } catch (error) {
-    console.error('Error fetching project title:', error);
-    return null;
-  }
 }
 
 export default async function TagSearch({ params, searchParams }: PageProps) {
@@ -39,7 +16,8 @@ export default async function TagSearch({ params, searchParams }: PageProps) {
 
   const tagName = decodeURIComponent(resolvedParams.tagName);
   const fromProject = resolvedSearchParams.fromProject as string | undefined;
-  const projectTitle = fromProject ? await getProjectTitle(fromProject) : null;
+  const project = fromProject ? await getProject(fromProject) : null;
+  const projectTitle = project?.title || null;
 
   return (
     <div className="min-h-screen py-12">
