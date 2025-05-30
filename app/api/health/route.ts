@@ -178,19 +178,20 @@ export const GET = createApiHandler<HealthResponse>({
       JSON.stringify({
         error: {
           code: 'HEALTH_CHECK_FAILED',
-          message: error instanceof Error ? error.message : 'Health check failed'
-        }
+          message:
+            error instanceof Error ? error.message : 'Health check failed',
+        },
       }),
-      { 
+      {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0'
-        }
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
       }
     );
     return response;
-  }
+  },
 });

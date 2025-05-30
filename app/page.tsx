@@ -151,7 +151,7 @@ export default function Home() {
               {highlights.map((item, index) => (
                 <div key={item.label} className="group relative">
                   <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-violet-500/30 via-fuchsia-500/30 to-indigo-500/30 opacity-0 blur transition-all duration-300 group-hover:opacity-100" />
-                  <div className="relative overflow-hidden rounded-xl border border-gray-800/80 bg-black/50 p-4 sm:p-6 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md transition-all duration-300 hover:border-violet-500/30 hover:shadow-[0_0_25px_rgba(124,58,237,0.2)]">
+                  <div className="relative overflow-hidden rounded-xl border border-gray-800/80 bg-black/50 p-4 shadow-[0_0_15px_rgba(0,0,0,0.3)] backdrop-blur-md transition-all duration-300 hover:border-violet-500/30 hover:shadow-[0_0_25px_rgba(124,58,237,0.2)] sm:p-6">
                     <div className="absolute inset-0 bg-gradient-to-br from-black via-transparent to-transparent opacity-50" />
                     <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                       <div
@@ -160,16 +160,16 @@ export default function Home() {
                     </div>
                     <div className="relative flex items-start gap-3 sm:gap-4">
                       <div
-                        className={`relative mt-0.5 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-r ${item.gradient} p-2.5 sm:p-3 transition-transform duration-300 group-hover:scale-110`}
+                        className={`relative mt-0.5 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-r ${item.gradient} p-2.5 transition-transform duration-300 group-hover:scale-110 sm:p-3`}
                       >
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_25%,rgba(0,0,0,0.2))]" />
-                        <item.icon className="relative h-5 w-5 sm:h-6 sm:w-6 text-white transition-transform duration-300 group-hover:rotate-12" />
+                        <item.icon className="relative h-5 w-5 text-white transition-transform duration-300 group-hover:rotate-12 sm:h-6 sm:w-6" />
                       </div>
-                      <div className="flex-1 min-w-0 text-left">
-                        <h3 className="text-lg sm:text-xl font-semibold text-white leading-tight mb-1">
+                      <div className="min-w-0 flex-1 text-left">
+                        <h3 className="mb-1 text-lg font-semibold leading-tight text-white sm:text-xl">
                           {item.label}
                         </h3>
-                        <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                        <p className="text-xs leading-relaxed text-gray-400 sm:text-sm">
                           {item.description}
                         </p>
                       </div>

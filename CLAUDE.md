@@ -189,6 +189,7 @@ The website now uses a sophisticated in-memory caching system with demand-based 
 #### Rate Limiting
 
 All API routes now include rate limiting with the following configuration:
+
 - **High-frequency endpoints**: 120 requests per minute (detail pages, status)
 - **Medium-frequency endpoints**: 60 requests per minute (list pages, health)
 - **Low-frequency endpoints**: 30 requests per minute (commits, stats, system)

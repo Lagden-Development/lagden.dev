@@ -99,9 +99,7 @@ export async function GET(
         throw new NotFoundError('Project', slug);
       }
 
-      console.log(
-        `[API] Found project: ${(projectEntry.fields as any).title}`
-      );
+      console.log(`[API] Found project: ${(projectEntry.fields as any).title}`);
 
       return transformProject(projectEntry);
     },

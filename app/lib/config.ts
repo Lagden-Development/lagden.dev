@@ -77,7 +77,6 @@ export const {
   enableDebugMode,
 } = config;
 
-
 // Cache configuration
 export const getCacheConfig = (type: keyof typeof config.cacheSettings) => {
   return {

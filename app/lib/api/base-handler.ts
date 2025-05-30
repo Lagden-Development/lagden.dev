@@ -33,7 +33,7 @@ export interface HandlerOptions<T> {
 export function createApiHandler<T>(options: HandlerOptions<T>) {
   return async (req: NextRequest) => {
     let rateLimitInfo: RateLimitInfo | undefined;
-    
+
     try {
       // Apply rate limiting if configured
       if (options.rateLimit) {
@@ -57,14 +57,23 @@ export function createApiHandler<T>(options: HandlerOptions<T>) {
         const transformed = options.transform ? options.transform(data) : data;
 
         const response = successResponse(transformed, { cached: false });
-        
+
         // Add rate limit headers if applicable
         if (rateLimitInfo) {
-          response.headers.set('X-RateLimit-Limit', rateLimitInfo.limit.toString());
-          response.headers.set('X-RateLimit-Remaining', rateLimitInfo.remaining.toString());
-          response.headers.set('X-RateLimit-Reset', rateLimitInfo.reset.toString());
+          response.headers.set(
+            'X-RateLimit-Limit',
+            rateLimitInfo.limit.toString()
+          );
+          response.headers.set(
+            'X-RateLimit-Remaining',
+            rateLimitInfo.remaining.toString()
+          );
+          response.headers.set(
+            'X-RateLimit-Reset',
+            rateLimitInfo.reset.toString()
+          );
         }
-        
+
         return response;
       }
 
@@ -100,14 +109,23 @@ export function createApiHandler<T>(options: HandlerOptions<T>) {
       }
 
       const response = successResponse(transformed, metadata);
-      
+
       // Add rate limit headers if applicable
       if (rateLimitInfo) {
-        response.headers.set('X-RateLimit-Limit', rateLimitInfo.limit.toString());
-        response.headers.set('X-RateLimit-Remaining', rateLimitInfo.remaining.toString());
-        response.headers.set('X-RateLimit-Reset', rateLimitInfo.reset.toString());
+        response.headers.set(
+          'X-RateLimit-Limit',
+          rateLimitInfo.limit.toString()
+        );
+        response.headers.set(
+          'X-RateLimit-Remaining',
+          rateLimitInfo.remaining.toString()
+        );
+        response.headers.set(
+          'X-RateLimit-Reset',
+          rateLimitInfo.reset.toString()
+        );
       }
-      
+
       return response;
     } catch (error) {
       // Allow custom error handling
@@ -119,15 +137,24 @@ export function createApiHandler<T>(options: HandlerOptions<T>) {
       // Default error handling
       const { code, message, statusCode } = handleApiError(error);
       const errorResp = errorResponse(code, message, statusCode);
-      
+
       // Add rate limit headers to error responses too
       if (rateLimitInfo && statusCode === 429) {
-        errorResp.headers.set('X-RateLimit-Limit', rateLimitInfo.limit.toString());
+        errorResp.headers.set(
+          'X-RateLimit-Limit',
+          rateLimitInfo.limit.toString()
+        );
         errorResp.headers.set('X-RateLimit-Remaining', '0');
-        errorResp.headers.set('X-RateLimit-Reset', rateLimitInfo.reset.toString());
-        errorResp.headers.set('Retry-After', Math.ceil(rateLimitInfo.reset - Date.now() / 1000).toString());
+        errorResp.headers.set(
+          'X-RateLimit-Reset',
+          rateLimitInfo.reset.toString()
+        );
+        errorResp.headers.set(
+          'Retry-After',
+          Math.ceil(rateLimitInfo.reset - Date.now() / 1000).toString()
+        );
       }
-      
+
       return errorResp;
     }
   };
@@ -209,7 +236,7 @@ export function checkRateLimit(
   }
 
   record.count++;
-  
+
   return {
     limit,
     remaining: limit - record.count,

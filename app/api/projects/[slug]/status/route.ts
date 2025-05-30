@@ -100,7 +100,7 @@ export async function GET(
       const nextUpdate = Date.now() + CACHE_TTL.STATUS * 1000;
       return {
         ...data,
-        _meta: { nextUpdate }
+        _meta: { nextUpdate },
       };
     },
   })(req);
