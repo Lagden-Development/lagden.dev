@@ -23,7 +23,7 @@ export default function Projects() {
       </section>
 
       {/* Projects Grid */}
-      <ProjectsGrid />
+      <ProjectsGrid enablePagination={true} itemsPerPage={9} />
     </div>
   );
 }
