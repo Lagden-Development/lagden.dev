@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createApiHandler } from '@/lib/api/base-handler';
+import { config } from '@/lib/config';
 import { cacheManager } from '@/lib/cache/manager';
 import { contentfulClient } from '@/lib/contentful-client';
 import { betterStackClient } from '@/lib/betterstack-client';
@@ -150,7 +151,7 @@ export const GET = createApiHandler<HealthResponse>({
     const healthData: HealthResponse = {
       status: overallStatus,
       timestamp: new Date().toISOString(),
-      version: process.env.VERCEL_GIT_COMMIT_SHA || 'development',
+      version: config.environment,
       uptime: Date.now() - startTime,
       services: {
         api: {
@@ -163,8 +164,8 @@ export const GET = createApiHandler<HealthResponse>({
       },
       environment: {
         nodeVersion: process.version,
-        region: process.env.VERCEL_REGION || 'local',
-        deployment: process.env.VERCEL_ENV || 'development',
+        region: 'local',
+        deployment: config.environment,
       },
     };
 

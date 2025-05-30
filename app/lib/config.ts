@@ -22,17 +22,15 @@ interface Config {
 
 function getEnvironment(): 'development' | 'staging' | 'production' {
   const env = process.env.NODE_ENV;
-  const vercelEnv = process.env.VERCEL_ENV;
 
   if (env === 'development') return 'development';
-  if (vercelEnv === 'preview') return 'staging';
   return 'production';
 }
 
 function createConfig(): Config {
   const environment = getEnvironment();
   const isDevelopment = environment === 'development';
-  const isStaging = environment === 'staging';
+  const isStaging = false;
   const isProduction = environment === 'production';
 
   // Feature flags based on environment
@@ -79,19 +77,6 @@ export const {
   enableDebugMode,
 } = config;
 
-// API helpers
-export const getApiUrl = (endpoint: string): string => {
-  return `${config.apiBaseUrl}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
-};
-
-export const getApiHeaders = (): Record<string, string> => {
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${config.apiKey}`,
-    'X-API-Version': '1.0.0',
-    'X-Client-Environment': config.environment,
-  };
-};
 
 // Cache configuration
 export const getCacheConfig = (type: keyof typeof config.cacheSettings) => {
@@ -145,19 +130,9 @@ export const getBaseUrl = (): string => {
     return window.location.origin;
   }
 
-  // Server-side URL detection
-  const vercelUrl = process.env.VERCEL_URL;
-  const protocol = process.env.VERCEL_ENV === 'production' ? 'https' : 'https';
-
-  if (vercelUrl) {
-    return `${protocol}://${vercelUrl}`;
-  }
-
   switch (config.environment) {
     case 'development':
       return 'http://localhost:3000';
-    case 'staging':
-      return 'https://staging.lagden.dev';
     case 'production':
       return 'https://lagden.dev';
     default:
@@ -166,14 +141,9 @@ export const getBaseUrl = (): string => {
 };
 
 // Error reporting configuration
-export const shouldReportError = (error: Error): boolean => {
+export const shouldReportError = (): boolean => {
   // Don't report certain development errors
   if (isDevelopment) {
-    return false;
-  }
-
-  // Filter out client-side network errors in staging
-  if (isStaging && error.message.includes('network')) {
     return false;
   }
 

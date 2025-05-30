@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { createApiHandler } from '@/lib/api/base-handler';
+import { config } from '@/lib/config';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -168,9 +169,8 @@ export const GET = createApiHandler<SystemInfoResponse>({
       // Runtime info (auto-detected)
       platform: process.platform,
 
-      // Environment (auto-detected)
-      environment:
-        process.env.NODE_ENV === 'development' ? 'development' : 'production',
+      // Environment (using proper detection from config)
+      environment: config.environment,
 
       // Safe uptime (rounded to hours to avoid exact process info)
       uptimeHours: Math.floor((process.uptime?.() || 0) / 3600),
