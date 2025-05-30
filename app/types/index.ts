@@ -27,10 +27,17 @@ export interface Project {
     data: {};
   };
   status?: {
-    status: string;
+    status: 'operational' | 'degraded' | 'down' | 'maintenance' | 'unknown';
     last_checked_at: string;
-    url: string;
+    monitor_url: string;
+    uptime_percentage?: number;
+    response_time?: number;
+    total_downtime?: number;
+    incidents_count?: number;
+    check_frequency?: number;
   };
+  better_stack_status_id?: string;
+  is_featured: boolean;
 }
 
 export interface Commit {
