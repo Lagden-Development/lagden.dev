@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cacheManager, CACHE_TTL } from '../cache/manager';
+import { cacheManager } from '../cache/manager';
 import { CacheConfig } from '../cache/types';
 import { successResponse, errorResponse, ApiMetadata } from './responses';
 import { handleApiError, ApiError } from './errors';
@@ -229,11 +229,17 @@ setInterval(() => {
 
 // Helper to get client IP address
 export function getClientIp(req: NextRequest): string {
+  // Check Cloudflare headers first (default for this project)
+  const cfConnectingIp = req.headers.get('cf-connecting-ip');
+  if (cfConnectingIp) {
+    return cfConnectingIp;
+  }
+
   // Check for various headers that might contain the real IP
   const forwardedFor = req.headers.get('x-forwarded-for');
   if (forwardedFor) {
     // x-forwarded-for may contain multiple IPs, take the first one
-    return forwardedFor.split(',')[0].trim();
+    return forwardedFor.split(',')[0]?.trim() || forwardedFor;
   }
 
   const realIp = req.headers.get('x-real-ip');
@@ -244,7 +250,7 @@ export function getClientIp(req: NextRequest): string {
   // Vercel specific
   const vercelForwardedFor = req.headers.get('x-vercel-forwarded-for');
   if (vercelForwardedFor) {
-    return vercelForwardedFor.split(',')[0].trim();
+    return vercelForwardedFor.split(',')[0]?.trim() || vercelForwardedFor;
   }
 
   // Fallback to a generic identifier
