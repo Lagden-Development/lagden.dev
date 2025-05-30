@@ -11,10 +11,10 @@ updates:
     open-pull-requests-limit: 5
     # Reviewers to request for dependency updates
     reviewers:
-      - 'lagden-dev-team'
+      - 'zachlagden'
     # Assignees for dependency updates
     assignees:
-      - 'lagden-dev-team'
+      - 'zachlagden'
     # Labels to add to dependency update PRs
     labels:
       - 'dependencies'
