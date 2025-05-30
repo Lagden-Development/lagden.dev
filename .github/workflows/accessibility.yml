@@ -1,0 +1,144 @@
+name: Accessibility Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  accessibility:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start application
+        run: npm start &
+        env:
+          PORT: 3000
+
+      - name: Wait for app to be ready
+        run: npx wait-on http://localhost:3000
+
+      - name: Run accessibility tests with axe-core
+        run: |
+          npm install -g @axe-core/cli
+          axe http://localhost:3000 --exit
+
+      - name: Run Lighthouse accessibility audit
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            http://localhost:3000
+            http://localhost:3000/projects
+            http://localhost:3000/people
+          configPath: './lighthouse.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+  color-contrast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install contrast checking tools
+        run: |
+          npm install -g pa11y pa11y-ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start application
+        run: npm start &
+        env:
+          PORT: 3000
+
+      - name: Wait for app to be ready
+        run: npx wait-on http://localhost:3000
+
+      - name: Run color contrast tests
+        run: |
+          pa11y http://localhost:3000 --standard WCAG2AAA --reporter json > pa11y-results.json || true
+          pa11y http://localhost:3000/projects --standard WCAG2AAA --reporter json > pa11y-projects.json || true
+          pa11y http://localhost:3000/people --standard WCAG2AAA --reporter json > pa11y-people.json || true
+
+      - name: Upload accessibility results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-results
+          path: |
+            pa11y-*.json
+            lhci_reports/
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            try {
+              const results = JSON.parse(fs.readFileSync('pa11y-results.json', 'utf8'));
+              const issues = results.issues || [];
+              const violations = issues.filter(issue => issue.type === 'error');
+              
+              const body = `## 🔍 Accessibility Test Results
+              
+              **Color Contrast & Accessibility Analysis:**
+              - Total issues found: ${issues.length}
+              - Critical violations: ${violations.length}
+              
+              ${violations.length > 0 ? `
+              ### ❌ Critical Issues to Fix:
+              ${violations.slice(0, 5).map(v => `- **${v.code}**: ${v.message} (${v.selector})`).join('\n')}
+              ${violations.length > 5 ? `\n... and ${violations.length - 5} more issues` : ''}
+              ` : '✅ No critical accessibility violations found!'}
+              
+              <details>
+              <summary>View full accessibility report</summary>
+              
+              ${issues.map(issue => `
+              **${issue.type.toUpperCase()}**: ${issue.code}
+              - Message: ${issue.message}
+              - Element: \`${issue.selector}\`
+              - Context: ${issue.context}
+              `).join('\n---\n')}
+              
+              </details>
+              `;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            } catch (error) {
+              console.error('Error processing accessibility results:', error);
+            }
