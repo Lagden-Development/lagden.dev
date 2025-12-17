@@ -15,7 +15,9 @@
       "Bash(pnpm audit:*)",
       "Bash(/home/zach/.claude/local/node_modules/@anthropic-ai/claude-code/vendor/ripgrep/x64-linux/rg \"LAGDEN_DEV_API\" --no-heading)",
       "Bash(git:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "WebSearch",
+      "Bash(pnpm install:*)"
     ],
     "deny": []
   },
