@@ -6,7 +6,7 @@ import React, { useEffect, useState, useRef } from 'react';
 const useSmoothMouse = (smoothFactor = 0.15) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [smoothedPosition, setSmoothedPosition] = useState({ x: 0, y: 0 });
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {

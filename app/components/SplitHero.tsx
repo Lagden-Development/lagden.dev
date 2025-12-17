@@ -533,7 +533,7 @@ export default function SplitHero() {
   const [highlightedDisplayedCode, setHighlightedDisplayedCode] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [codeProgress, setCodeProgress] = useState(0);
-  const typewriterRef = useRef<NodeJS.Timeout>();
+  const typewriterRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Typewriter effect for code
   useEffect(() => {
