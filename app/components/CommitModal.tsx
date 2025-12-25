@@ -2,17 +2,10 @@
 
 import React, { useEffect, useCallback, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  X,
-  GitCommit,
-  ExternalLink,
-  User,
-  Calendar,
-  Hash,
-  Clock,
-} from 'lucide-react';
+import { X, GitCommit, ExternalLink, Hash, Clock } from 'lucide-react';
 
 type Commit = {
   sha: string;
@@ -253,10 +246,12 @@ const CommitModal: React.FC<CommitModalProps> = ({
             {loading ? (
               <div className="h-10 w-10 animate-pulse rounded-full bg-gray-700" />
             ) : profile?.avatar ? (
-              <img
+              <Image
                 src={profile.avatar}
                 alt={commit.commit.author.name}
-                className="h-10 w-10 rounded-full border border-gray-600"
+                width={40}
+                height={40}
+                className="rounded-full border border-gray-600"
               />
             ) : (
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 font-semibold text-white">

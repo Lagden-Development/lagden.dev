@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { GitCommit, ExternalLink, Calendar, User, Hash } from 'lucide-react';
@@ -268,10 +269,12 @@ const CommitCard: React.FC<{
                 {loading ? (
                   <div className="h-8 w-8 animate-pulse rounded-full bg-gray-700" />
                 ) : profile?.avatar ? (
-                  <img
+                  <Image
                     src={profile.avatar}
                     alt={commit.author_name}
-                    className="h-8 w-8 rounded-full border border-gray-600"
+                    width={32}
+                    height={32}
+                    className="rounded-full border border-gray-600"
                   />
                 ) : (
                   <div

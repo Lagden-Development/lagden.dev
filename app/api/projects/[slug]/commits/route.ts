@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createApiHandler, generateCacheKey } from '@/lib/api/base-handler';
+import { getProjectBySlug } from '@/lib/data/projects';
 import type { Commit } from '@/types';
 
 interface GitHubCommit {
@@ -25,27 +26,11 @@ interface CommitsApiResponse {
   commits: Commit[];
 }
 
-function getBaseUrl(): string {
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-  return 'http://localhost:3000';
-}
-
 async function fetchCommitsData(slug: string): Promise<CommitsApiResponse> {
-  // First, get the project to find its GitHub repository URL
-  const projectResponse = await fetch(`${getBaseUrl()}/api/projects/${slug}`, {
-    next: { revalidate: 0 },
-  });
+  // Get the project from cache/Contentful (no HTTP self-call needed)
+  const project = await getProjectBySlug(slug);
 
-  if (!projectResponse.ok) {
-    throw new Error(`Project not found: ${slug}`);
-  }
-
-  const projectData = await projectResponse.json();
-  const project = projectData.data;
-
-  if (!project?.github_repo_url) {
+  if (!project.github_repo_url) {
     throw new Error(`No GitHub repository found for project: ${slug}`);
   }
 

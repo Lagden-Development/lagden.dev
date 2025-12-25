@@ -186,6 +186,7 @@ export async function GET(request: NextRequest) {
                 boxShadow: '0 0 40px rgba(124, 58, 237, 0.4)',
               }}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse uses Satori renderer which doesn't support next/image */}
               <img
                 src={imageUrl}
                 alt={title}
