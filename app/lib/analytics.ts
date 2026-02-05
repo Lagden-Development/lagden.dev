@@ -176,16 +176,6 @@ export function trackError(
     });
   }
 
-  // Also send to Sentry if available
-  if (typeof window !== 'undefined' && (window as any).Sentry) {
-    (window as any).Sentry.captureException(new Error(errorMessage), {
-      tags: {
-        errorType,
-      },
-      extra: context,
-    });
-  }
-
   if (process.env.NODE_ENV === 'development') {
     console.error('❌ Error tracked:', { errorType, errorMessage, context });
   }

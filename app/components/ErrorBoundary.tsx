@@ -101,17 +101,6 @@ class ErrorBoundary extends React.Component<
   override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 
-    // Report to error tracking service
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      (window as any).Sentry.captureException(error, {
-        contexts: {
-          react: {
-            componentStack: errorInfo.componentStack,
-          },
-        },
-      });
-    }
-
     // Call custom error handler if provided
     this.props.onError?.(error, errorInfo);
 

@@ -55,7 +55,6 @@ function getPackageInfo() {
       'tailwindcss',
       'contentful',
       'lucide-react',
-      '@sentry/nextjs',
       'geist',
     ];
 
@@ -96,7 +95,6 @@ function getPackageDescription(packageName: string): string {
     tailwindcss: 'CSS framework',
     contentful: 'CMS client',
     'lucide-react': 'Icon library',
-    '@sentry/nextjs': 'Error tracking',
     geist: 'Font family',
   };
 

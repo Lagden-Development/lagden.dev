@@ -6,7 +6,6 @@ interface Config {
   isStaging: boolean;
   isProduction: boolean;
   enableAnalytics: boolean;
-  enableSentry: boolean;
   enableDebugMode: boolean;
   cacheSettings: {
     projects: number;
@@ -53,7 +52,6 @@ function createConfig(): Config {
     isStaging,
     isProduction,
     enableAnalytics: !isDevelopment,
-    enableSentry: !isDevelopment,
     enableDebugMode: isDevelopment,
     cacheSettings,
     features,
@@ -73,7 +71,6 @@ export const {
   isStaging,
   isProduction,
   enableAnalytics,
-  enableSentry,
   enableDebugMode,
 } = config;
 

@@ -27,21 +27,6 @@ export function WebVitals() {
         });
       }
 
-      // Send to Sentry for performance monitoring
-      if (typeof window !== 'undefined' && (window as any).Sentry) {
-        (window as any).Sentry.addBreadcrumb({
-          category: 'web-vital',
-          message: `${metric.name}: ${Math.round(metric.value)}ms (${metric.rating})`,
-          level: 'info',
-          data: {
-            name: metric.name,
-            value: metric.value,
-            rating: metric.rating,
-            navigationType: metric.navigationType,
-          },
-        });
-      }
-
       // Console log in development
       if (process.env.NODE_ENV === 'development') {
         console.log(

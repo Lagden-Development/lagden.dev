@@ -44,3 +44,6 @@ next-env.d.ts
 # Codacy
 .codacy/
 .github/copilot-instructions.md
+
+# MCP configuration (local development tool)
+.mcp.json
