@@ -542,8 +542,8 @@ interface Commit {
   author_email: string;
   date: string;
   url: string;
-  author_username?: string;  // Optional GitHub login
-  author_avatar?: string;    // Optional GitHub avatar URL
+  author_username?: string; // Optional GitHub login
+  author_avatar?: string; // Optional GitHub avatar URL
 }
 
 interface CommitsResponse {
@@ -722,6 +722,7 @@ Dockerfile stages:
 ```
 
 Key files:
+
 - `Dockerfile` - Multi-stage production build
 - `docker-compose.yml` - Coolify deployment config
 - `.dockerignore` - Excludes unnecessary files from build
@@ -781,10 +782,12 @@ curl http://localhost:3000/people
 See `.env.local.example` for full documentation. Key variables:
 
 **Required:**
+
 - `CONTENTFUL_SPACE_ID` - Contentful CMS space ID
 - `CONTENTFUL_DELIVERY_API_KEY` - Contentful delivery API key
 
 **Optional:**
+
 - `SENTRY_AUTH_TOKEN` - For source map uploads (build-time only)
 - `BETTERSTACK_UPTIME_API_KEY` - For status monitoring
 - `SYSTEM_DEPLOYMENT` - Set to "coolify" by docker-compose.yml
@@ -794,6 +797,7 @@ Note: Sentry DSN is now hardcoded in the config files, not an environment variab
 ### Resource Limits
 
 Default Docker resource limits (configurable in docker-compose.yml):
+
 - CPU: 1.0 cores (0.25 reserved)
 - Memory: 512MB (256MB reserved)
 - Log rotation: 10MB max, 3 files

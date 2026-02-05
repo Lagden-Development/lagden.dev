@@ -8,14 +8,14 @@ The official portfolio website for **Lagden Development**, built with Next.js 16
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| **Framework** | Next.js 16.1.4 (App Router) |
-| **UI** | React 19.2.1, Tailwind CSS 3.4.18 |
-| **Language** | TypeScript 5.8.3 |
-| **CMS** | Contentful |
-| **Monitoring** | Sentry, Better Stack |
-| **Deployment** | Docker / Coolify |
+| Category       | Technology                        |
+| -------------- | --------------------------------- |
+| **Framework**  | Next.js 16.1.4 (App Router)       |
+| **UI**         | React 19.2.1, Tailwind CSS 3.4.18 |
+| **Language**   | TypeScript 5.8.3                  |
+| **CMS**        | Contentful                        |
+| **Monitoring** | Sentry, Better Stack              |
+| **Deployment** | Docker / Coolify                  |
 
 ## Features
 
@@ -60,12 +60,14 @@ The application will be available at `http://localhost:3000`.
 ### Environment Variables
 
 **Required:**
+
 ```bash
 CONTENTFUL_SPACE_ID=your_space_id
 CONTENTFUL_DELIVERY_API_KEY=your_api_key
 ```
 
 **Optional:**
+
 ```bash
 CONTENTFUL_ENVIRONMENT=master
 SENTRY_AUTH_TOKEN=             # Build-time only, for source maps
@@ -107,6 +109,7 @@ docker compose up -d
 ```
 
 **Resource Defaults:**
+
 - CPU: 1 core (0.25 reserved)
 - Memory: 512MB (256MB reserved)
 - Health check: `/api/health` endpoint
@@ -127,15 +130,15 @@ app/
 
 ## API Endpoints
 
-| Endpoint | Description | Rate Limit |
-|----------|-------------|------------|
-| `GET /api/projects` | List all projects | 60/min |
-| `GET /api/projects/[slug]` | Project details | 120/min |
-| `GET /api/projects/[slug]/commits` | Project commits | 30/min |
-| `GET /api/projects/[slug]/status` | Project health | 120/min |
-| `GET /api/people` | List team members | 60/min |
-| `GET /api/people/[slug]` | Person details | 120/min |
-| `GET /api/health` | System health check | 60/min |
+| Endpoint                           | Description         | Rate Limit |
+| ---------------------------------- | ------------------- | ---------- |
+| `GET /api/projects`                | List all projects   | 60/min     |
+| `GET /api/projects/[slug]`         | Project details     | 120/min    |
+| `GET /api/projects/[slug]/commits` | Project commits     | 30/min     |
+| `GET /api/projects/[slug]/status`  | Project health      | 120/min    |
+| `GET /api/people`                  | List team members   | 60/min     |
+| `GET /api/people/[slug]`           | Person details      | 120/min    |
+| `GET /api/health`                  | System health check | 60/min     |
 
 ## Contributing
 
