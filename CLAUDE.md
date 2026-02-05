@@ -13,26 +13,30 @@ This file provides comprehensive guidance to Claude Code (claude.ai/code) when w
 
 ## 📁 Project Overview
 
-This is a **Next.js 15** portfolio website for Lagden Development, showcasing projects and team members with a focus on open-source development.
+This is a **Next.js 16** portfolio website for Lagden Development, showcasing projects and team members with a focus on open-source development.
 
 ### Tech Stack
 
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript 5.7.2
-- **Styling**: Tailwind CSS with custom dark theme
-- **Fonts**: Geist Sans & Geist Mono
-- **CMS**: External API with Contentful rich-text support
+- **Framework**: Next.js 16.1.4 with App Router
+- **Language**: TypeScript 5.8.3
+- **UI**: React 19.2.1
+- **Styling**: Tailwind CSS 3.4.18 with custom dark theme
+- **Fonts**: Geist Sans & Geist Mono (v1.4.2)
+- **CMS**: Contentful (v11.10.2) with rich-text support
 - **Analytics**: Google Analytics 4 (GA4)
 - **Monitoring**: Sentry for error tracking and performance
 - **Package Manager**: pnpm (REQUIRED - do not use npm)
 
 ### Key Dependencies
 
-- `@contentful/rich-text-html-renderer` - Rendering CMS content
-- `@sentry/nextjs` - Error and performance monitoring
-- `lucide-react` - Icon library
-- `web-vitals` - Performance metrics
+- `contentful` (11.10.2) - Contentful CMS SDK
+- `@contentful/rich-text-html-renderer` (17.1.6) - Rendering CMS content
+- `@sentry/nextjs` (10.x) - Error and performance monitoring
+- `lucide-react` (0.562.0) - Icon library
+- `web-vitals` (5.0.3) - Performance metrics
 - `shadcn/ui` components (button, card)
+- `class-variance-authority` (0.7.1) - Component variants
+- `@radix-ui/react-slot` (1.2.4) - Radix UI primitives
 
 ### Ad Blocker Compatibility
 
@@ -48,16 +52,29 @@ This is a **Next.js 15** portfolio website for Lagden Development, showcasing pr
 ```
 app/
 ├── api/                  # API routes
+│   ├── projects/        # Projects endpoints (list, detail, commits, status)
+│   ├── people/          # People endpoints (list, detail)
 │   ├── health/          # Health check endpoint
-│   └── og/              # Open Graph image generation with project/people images
+│   ├── cache/stats/     # Cache statistics endpoint
+│   ├── system/          # System information endpoint
+│   └── og/              # Open Graph image generation
 ├── components/          # React components
-│   ├── layout/         # Navigation & Footer
-│   ├── shared/ui/      # Reusable UI components
-│   └── ui/             # Base UI components (shadcn)
-├── helpers/            # Helper functions
+│   ├── layout/         # Navbar, Footer
+│   ├── shared/ui/      # ProjectsGrid, PeopleGrid, CommitsList, MouseGradient
+│   ├── skeletons/      # Loading skeleton components
+│   └── ui/             # Base UI components (Button, Card - shadcn style)
+├── helpers/            # Helper functions (URL parsing, transforms)
 ├── lib/                # Core utilities
+│   ├── api/           # Base handler, responses, errors
+│   ├── cache/         # Cache manager with LRU eviction
+│   └── data/          # Data utilities
 ├── types/              # TypeScript interfaces
-└── [pages]             # Page routes
+├── page.tsx            # Home page
+├── projects/           # Projects routes
+├── people/             # People routes
+├── search/             # Search routes (main + tag filtering)
+├── updates/            # Updates/commits page
+└── nerds/              # Developer dashboard (hidden Easter egg)
 ```
 
 ### Data Flow Architecture
@@ -114,6 +131,16 @@ app/
 - Interactive hover animations including rotating commit art
 - Uses new GitHub public API integration (no API key required)
 
+### Nerds Page (`/nerds`) - Easter Egg
+
+- Hidden developer dashboard accessible via footer link
+- Real-time cache performance metrics (hit rate, memory usage)
+- Service health dashboard with latency monitoring
+- Package dependency information
+- Build configuration and system statistics
+- Live refresh with 5-second auto-update intervals
+- Top accessed cache keys and statistics
+
 ## 🧩 Component Architecture
 
 ### Layout Components
@@ -124,14 +151,24 @@ app/
 
 ### Core Components
 
-- **SearchBar**: Advanced search with debouncing, filters, analytics
-- **ProjectsGrid**: Server component with pagination, skeleton loading, stagger animations
-- **PeopleGrid**: Server component for team display
-- **CommitsList**: Revolutionary commits viewer with hash-based generative art, timeline design, commit type detection, and beautiful animations
-- **StatusIndicator**: Real-time service health status with countdown timer, uses new `/api/projects/[slug]/status` endpoint
-- **MouseGradient**: Interactive gradient effect following cursor
-- **TiltCard**: 3D parallax tilt effect with dynamic glow on hover
-- **SectionHeader**: Scroll-triggered letter-spacing transitions
+- **SearchBar**: Advanced search with 300ms debouncing, fuzzy matching, relevance scoring, filter options
+- **ProjectsGrid**: Client component with pagination (9/page), skeleton loading, stagger animations, TiltCard wrappers
+- **PeopleGrid**: Client component for team display with adaptive grid layout
+- **CommitsList**: Revolutionary commits viewer with:
+  - Hash-based generative art (SHA → RGB colors + gradient angle)
+  - Smart commit type detection (✨ feat, 🐛 fix, 📚 docs, 🎨 style, ♻️ refactor, 🧪 test, 🔧 chore)
+  - Timeline visualization with pulsing dots
+  - GitHub profile fetching with avatar fallback
+- **StatusIndicator**: Real-time service health status with:
+  - Modal with 6-metric display (status, response time, availability, incidents, downtime, check interval)
+  - Countdown timer to next update
+  - Status-specific gradients and animations
+- **MouseGradient**: Full-page interactive gradient following cursor with smooth easing (0.08 factor)
+- **TiltCard**: 3D parallax effect with perspective(1000px), dynamic glow, 1.01x scale on hover
+- **SectionHeader**: Scroll-triggered letter-spacing transitions (0 → -0.05em)
+- **StaggerContainer**: Sequential animations using IntersectionObserver with configurable delay
+- **DynamicHero**: Responsive hero with viewport-based sizing
+- **ErrorBoundary**: Class-based error boundary with fallback UI and retry functionality
 
 ### UI Components (shadcn/ui style)
 
@@ -254,13 +291,16 @@ CACHE_MAX_SIZE_MB=50
 CACHE_MAX_ENTRIES=1000
 ENABLE_CACHE_STATS=true
 
-# External Services
+# External Services (Required)
 CONTENTFUL_SPACE_ID              # Contentful CMS space ID
 CONTENTFUL_DELIVERY_API_KEY      # Contentful delivery API key
-CONTENTFUL_ENVIRONMENT=master    # Contentful environment (optional)
-BETTERSTACK_UPTIME_API_KEY       # Better Stack API key for status monitoring (optional)
-SENTRY_AUTH_TOKEN                # Sentry integration (optional)
 
+# External Services (Optional)
+CONTENTFUL_ENVIRONMENT=master    # Contentful environment
+BETTERSTACK_UPTIME_API_KEY       # Better Stack API key for status monitoring
+SENTRY_AUTH_TOKEN                # Build-time only, for source map uploads
+
+# Note: Sentry DSN is hardcoded in config files (instrumentation-client.ts, sentry.*.config.ts)
 # Note: No GitHub API key required - uses public GitHub API
 ```
 
@@ -358,10 +398,14 @@ TTFB: 800ms
 
 ### Sentry Integration
 
-- Error tracking with context
-- Performance monitoring
-- Session replay (10% sample rate)
-- Source map support
+- **Project**: ldev-site (lagden-development org)
+- **Tunnel Route**: `/monitoring` (ad-blocker bypass)
+- Error tracking with context and PII collection
+- Performance monitoring (100% trace sample rate)
+- Session replay (10% sample rate, 100% on errors)
+- Source map uploads (build-time via SENTRY_AUTH_TOKEN)
+- Logs enabled for better debugging
+- Tree-shaking removes debug logging in production
 
 ## 🛡️ Security & Middleware
 
@@ -460,8 +504,23 @@ interface Project {
   github_repo_url?: string;
   website_url?: string;
   tags: string[];
-  project_readme: Document; // Contentful
-  status?: Status;
+  project_readme: {
+    nodeType: 'document';
+    content: any[];
+    data: {};
+  };
+  status?: {
+    status: 'operational' | 'degraded' | 'down' | 'maintenance' | 'unknown';
+    last_checked_at: string;
+    monitor_url: string;
+    uptime_percentage?: number;
+    response_time?: number;
+    total_downtime?: number;
+    incidents_count?: number;
+    check_frequency?: number;
+  };
+  better_stack_status_id?: string;
+  is_featured: boolean;
 }
 
 interface Person {
@@ -471,8 +530,8 @@ interface Person {
   location: string;
   pronouns: string;
   skills: string[];
-  links: Link[];
-  introduction: Document; // Contentful
+  links: { url: string; name: string }[];
+  introduction: Record<string, any>; // Contentful rich text
   picture_url: string;
 }
 
@@ -483,6 +542,14 @@ interface Commit {
   author_email: string;
   date: string;
   url: string;
+  author_username?: string;  // Optional GitHub login
+  author_avatar?: string;    // Optional GitHub avatar URL
+}
+
+interface CommitsResponse {
+  project_title: string;
+  repository_url: string;
+  commits: Commit[];
 }
 ```
 
@@ -704,9 +771,8 @@ curl http://localhost:3000/people
 4. Set environment variables in Coolify UI:
    - `CONTENTFUL_SPACE_ID` (required)
    - `CONTENTFUL_DELIVERY_API_KEY` (required)
-   - `SENTRY_AUTH_TOKEN` (optional, build-time only)
-   - `SENTRY_DSN` (optional)
-   - `BETTERSTACK_UPTIME_API_KEY` (optional)
+   - `SENTRY_AUTH_TOKEN` (optional, build-time only for source maps)
+   - `BETTERSTACK_UPTIME_API_KEY` (optional, for status monitoring)
 5. Configure domain (Coolify handles SSL via Traefik)
 6. Deploy and verify health checks pass
 
@@ -719,10 +785,11 @@ See `.env.local.example` for full documentation. Key variables:
 - `CONTENTFUL_DELIVERY_API_KEY` - Contentful delivery API key
 
 **Optional:**
-- `SENTRY_AUTH_TOKEN` - For source map uploads (build-time)
-- `SENTRY_DSN` - For error tracking (runtime)
+- `SENTRY_AUTH_TOKEN` - For source map uploads (build-time only)
 - `BETTERSTACK_UPTIME_API_KEY` - For status monitoring
 - `SYSTEM_DEPLOYMENT` - Set to "coolify" by docker-compose.yml
+
+Note: Sentry DSN is now hardcoded in the config files, not an environment variable.
 
 ### Resource Limits
 
