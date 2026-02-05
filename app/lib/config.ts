@@ -128,15 +128,7 @@ export const getBaseUrl = (): string => {
   if (isClient) {
     return window.location.origin;
   }
-
-  switch (config.environment) {
-    case 'development':
-      return 'http://localhost:3000';
-    case 'production':
-      return 'https://lagden.dev';
-    default:
-      return 'https://lagden.dev';
-  }
+  return config.isDevelopment ? 'http://localhost:3000' : 'https://lagden.dev';
 };
 
 // Error reporting configuration

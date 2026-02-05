@@ -274,12 +274,6 @@ export function getClientIp(req: NextRequest): string {
     return realIp;
   }
 
-  // Vercel specific
-  const vercelForwardedFor = req.headers.get('x-vercel-forwarded-for');
-  if (vercelForwardedFor) {
-    return vercelForwardedFor.split(',')[0]?.trim() || vercelForwardedFor;
-  }
-
   // Fallback to a generic identifier
   return 'unknown-ip';
 }

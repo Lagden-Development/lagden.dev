@@ -81,11 +81,8 @@ class ApiClient {
     // In server context, we need absolute URLs
     let fullUrl = url;
     if (typeof window === 'undefined' && url.startsWith('/')) {
-      // Server-side: use localhost
-      const host = process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : 'http://localhost:3000';
-      fullUrl = `${host}${url}`;
+      // Server-side: always use localhost (Docker container)
+      fullUrl = `http://localhost:3000${url}`;
     }
 
     const requestOptions: RequestInit = {

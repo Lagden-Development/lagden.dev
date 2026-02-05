@@ -181,9 +181,7 @@ export const GET = createApiHandler<SystemInfoResponse>({
       // Build info (auto-detected from tsconfig.json + minimal overrides)
       buildTarget: tsConfig.buildTarget,
       bundler: process.env.SYSTEM_BUNDLER || nextConfig.bundler,
-      deployment: process.env.VERCEL
-        ? 'vercel'
-        : process.env.SYSTEM_DEPLOYMENT || 'custom',
+      deployment: process.env.SYSTEM_DEPLOYMENT || 'docker',
 
       // Stats (configurable for accuracy)
       stats: {

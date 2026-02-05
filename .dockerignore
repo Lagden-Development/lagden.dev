@@ -1,0 +1,14 @@
+node_modules
+.pnpm-store
+.next
+.git
+.env
+.env.*
+!.env.local.example
+coverage
+*.md
+.github
+.claude
+.vercel
+Dockerfile*
+docker-compose*.yml

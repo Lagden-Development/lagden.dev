@@ -444,8 +444,7 @@ pnpm analyze      # Bundle analysis
 ```typescript
 // Automatic environment detection
 development: NODE_ENV === 'development';
-staging: VERCEL_ENV === 'preview';
-production: VERCEL_ENV === 'production';
+production: NODE_ENV === 'production';
 ```
 
 ## 📝 Type Definitions
@@ -636,25 +635,101 @@ interface Commit {
 
 ## 📦 Deployment
 
-### Platforms
+### Platform: Coolify (Docker)
 
-- **Production**: Vercel (automatic from main branch)
-- **Staging**: Vercel preview deployments
+- **Production**: Coolify via Docker Compose
+- **Orchestration**: Coolify handles container orchestration
+- **Reverse Proxy**: Traefik (managed by Coolify)
+- **SSL**: Automatic via Coolify/Traefik
 - **Monitoring**: Better Stack for uptime
 
-### Build Process
+### Docker Architecture
 
-1. Install dependencies: `pnpm install`
-2. Build: `pnpm build`
-3. Start: `pnpm start`
+The project uses a multi-stage Docker build optimized for Next.js:
+
+```
+Dockerfile stages:
+1. deps    - Install dependencies with pnpm
+2. builder - Build the Next.js standalone output
+3. runner  - Minimal production image (~150MB)
+```
+
+Key files:
+- `Dockerfile` - Multi-stage production build
+- `docker-compose.yml` - Coolify deployment config
+- `.dockerignore` - Excludes unnecessary files from build
+
+### Local Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start dev server (port 3000)
+pnpm dev
+
+# Production build
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+### Docker Testing (Local)
+
+```bash
+# Build the Docker image
+docker build -t lagden-dev .
+
+# Run locally with environment variables
+docker run -p 3000:3000 \
+  -e CONTENTFUL_SPACE_ID=xxx \
+  -e CONTENTFUL_DELIVERY_API_KEY=xxx \
+  lagden-dev
+
+# Test health endpoint
+curl http://localhost:3000/api/health
+
+# Test pages load
+curl http://localhost:3000
+curl http://localhost:3000/projects
+curl http://localhost:3000/people
+```
+
+### Coolify Deployment
+
+1. Push changes to GitHub
+2. In Coolify: Add new resource → Docker Compose
+3. Connect GitHub repository
+4. Set environment variables in Coolify UI:
+   - `CONTENTFUL_SPACE_ID` (required)
+   - `CONTENTFUL_DELIVERY_API_KEY` (required)
+   - `SENTRY_AUTH_TOKEN` (optional, build-time only)
+   - `SENTRY_DSN` (optional)
+   - `BETTERSTACK_UPTIME_API_KEY` (optional)
+5. Configure domain (Coolify handles SSL via Traefik)
+6. Deploy and verify health checks pass
 
 ### Environment Variables
 
-Set in Vercel dashboard:
+See `.env.local.example` for full documentation. Key variables:
 
-- `CONTENTFUL_SPACE_ID`
-- `CONTENTFUL_DELIVERY_API_KEY`
-- `SENTRY_AUTH_TOKEN` (optional)
+**Required:**
+- `CONTENTFUL_SPACE_ID` - Contentful CMS space ID
+- `CONTENTFUL_DELIVERY_API_KEY` - Contentful delivery API key
+
+**Optional:**
+- `SENTRY_AUTH_TOKEN` - For source map uploads (build-time)
+- `SENTRY_DSN` - For error tracking (runtime)
+- `BETTERSTACK_UPTIME_API_KEY` - For status monitoring
+- `SYSTEM_DEPLOYMENT` - Set to "coolify" by docker-compose.yml
+
+### Resource Limits
+
+Default Docker resource limits (configurable in docker-compose.yml):
+- CPU: 1.0 cores (0.25 reserved)
+- Memory: 512MB (256MB reserved)
+- Log rotation: 10MB max, 3 files
 
 ---
 
